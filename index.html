@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Feud - Interactive Wireframe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Welcome Screen */
+        .welcome-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+            text-align: center;
+        }
+
+        .welcome-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .game-title {
+            font-size: 3em;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-options {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .login-btn {
+            padding: 20px 40px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            color: white;
+            font-weight: bold;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Login Forms */
+        .login-form {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 500px;
+            margin: 50px auto;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1em;
+            border: 2px solid transparent;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Teams Management */
+        .teams-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 30px 0;
+        }
+
+        .team-panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .team-title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #FFD700;
+        }
+
+        .participant-list {
+            min-height: 200px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .participant-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #4CAF50;
+        }
+
+        /* Game Screen */
+        .game-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .scoreboard {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .team-score {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 200px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .team-name {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .score {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .timer {
+            font-size: 2em;
+            font-weight: bold;
+            color: #FF6B6B;
+        }
+
+        .strikes {
+            display: flex;
+            gap: 20px;
+        }
+
+        .strike-counter {
+            text-align: center;
+        }
+
+        .strike-display {
+            font-size: 1.5em;
+            color: #FF6B6B;
+        }
+
+        .question-area {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .question-number {
+            background: #FFD700;
+            color: #333;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 1.4em;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .answers-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .answer-slot {
+            background: rgba(0, 0, 0, 0.3);
+            border: 3px solid #00BFFF;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 70px;
+            transition: all 0.3s ease;
+        }
+
+        .answer-slot.revealed {
+            background: linear-gradient(45deg, rgba(76, 175, 80, 0.3), rgba(139, 195, 74, 0.3));
+            border-color: #4CAF50;
+            animation: revealAnimation 0.8s ease-out;
+        }
+
+        @keyframes revealAnimation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .answer-text {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .answer-points {
+            background: #FFD700;
+            color: #333;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .participant-controls {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .answer-input {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .input-field {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1.1em;
+            width: 400px;
+            border: 2px solid transparent;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .submit-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+            color: white;
+            font-weight: bold;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .host-controls {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .reveal-btn, .next-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .reveal-btn {
+            background: linear-gradient(45deg, #4ECDC4, #44A08D);
+            color: white;
+        }
+
+        .next-btn {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #333;
+        }
+
+        .reveal-btn:hover, .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .feedback {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .feedback.correct {
+            background: rgba(76, 175, 80, 0.3);
+            border: 2px solid #4CAF50;
+            color: #4CAF50;
+        }
+
+        .feedback.incorrect {
+            background: rgba(244, 67, 54, 0.3);
+            border: 2px solid #F44336;
+            color: #F44336;
+        }
+
+        /* Game Over */
+        .game-over {
+            text-align: center;
+            padding: 50px;
+        }
+
+        .winner-announcement {
+            font-size: 3.5em;
+            color: #FFD700;
+            margin-bottom: 30px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-30px); }
+            60% { transform: translateY(-15px); }
+        }
+
+        .final-scores {
+            display: flex;
+            justify-content: center;
+            gap: 100px;
+            margin: 40px 0;
+        }
+
+        .back-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .wireframe-note {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            font-weight: bold;
+            z-index: 1000;
+        }
+
+        .minimum-players {
+            background: rgba(255, 193, 7, 0.2);
+            border: 2px solid #FFC107;
+            color: #FFC107;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .start-game-btn {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 30px auto;
+        }
+
+        .start-game-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .start-game-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="wireframe-note">INTERACTIVE WIREFRAME</div>
+    
+    <div class="container">
+        <!-- Welcome Screen -->
+        <div id="welcomeScreen" class="screen active">
+            <div class="welcome-container">
+                <div class="welcome-card">
+                    <h1 class="game-title">Family Feud</h1>
+                    <p style="font-size: 1.2em; margin-bottom: 30px;">Sanskrit Game Show</p>
+                    <div class="login-options">
+                        <button class="login-btn" onclick="showHostLogin()">Host Login</button>
+                        <button class="login-btn" onclick="showParticipantLogin()">Participant Login</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Host Login -->
+        <div id="hostLoginScreen" class="screen">
+            <div class="login-form">
+                <h2 style="text-align: center; margin-bottom: 30px; color: #FFD700;">Host Login</h2>
+                <div class="form-group">
+                    <label>Username:</label>
+                    <input type="text" id="hostUsername" placeholder="Enter host username">
+                </div>
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" id="hostPassword" placeholder="Enter password">
+                </div>
+                <div style="text-align: center;">
+                    <button class="login-btn" onclick="hostLogin()">Login as Host</button>
+                    <button class="back-btn" onclick="showWelcome()">Back</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Participant Login -->
+        <div id="participantLoginScreen" class="screen">
+            <div class="login-form">
+                <h2 style="text-align: center; margin-bottom: 30px; color: #FFD700;">Participant Login</h2>
+                <div class="form-group">
+                    <label>Team Name:</label>
+                    <select id="teamSelect">
+                        <option value="">Select Team</option>
+                        <option value="Team A">Team A</option>
+                        <option value="Team B">Team B</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Your Name:</label>
+                    <input type="text" id="participantName" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" id="participantPassword" placeholder="Pre-assigned password">
+                </div>
+                <div style="text-align: center;">
+                    <button class="login-btn" onclick="participantLogin()">Join Team</button>
+                    <button class="back-btn" onclick="showWelcome()">Back</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teams Management (Host View) -->
+        <div id="teamsManagementScreen" class="screen">
+            <h2 style="text-align: center; margin-bottom: 30px; color: #FFD700;">Teams Management</h2>
+            
+            <div class="minimum-players">
+                Minimum 1 participant required from each team to start the game
+            </div>
+
+            <div class="teams-container">
+                <div class="team-panel">
+                    <h3 class="team-title">Team A</h3>
+                    <div class="participant-list" id="teamAList">
+                        <p style="text-align: center; color: #ccc; margin-top: 80px;">Waiting for participants...</p>
+                    </div>
+                </div>
+                <div class="team-panel">
+                    <h3 class="team-title">Team B</h3>
+                    <div class="participant-list" id="teamBList">
+                        <p style="text-align: center; color: #ccc; margin-top: 80px;">Waiting for participants...</p>
+                    </div>
+                </div>
+            </div>
+
+            <button class="start-game-btn" id="startGameBtn" onclick="startGame()" disabled>
+                Start Game
+            </button>
+            
+            <div style="text-align: center;">
+                <button class="back-btn" onclick="showWelcome()">Back to Welcome</button>
+            </div>
+        </div>
+
+        <!-- Team Dashboard (Participant View) -->
+        <div id="teamDashboardScreen" class="screen">
+            <h2 style="text-align: center; margin-bottom: 30px; color: #FFD700;">Team Dashboard</h2>
+            
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h3 id="currentTeamName">Team A</h3>
+                <p>Waiting for host to start the game...</p>
+            </div>
+
+            <div class="team-panel" style="max-width: 600px; margin: 0 auto;">
+                <h3 class="team-title">Team Members</h3>
+                <div class="participant-list" id="currentTeamList">
+                    <!-- Team members will be populated here -->
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="back-btn" onclick="showWelcome()">Leave Team</button>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="gameScreen" class="screen">
+            <div class="game-header">
+                <h1 class="game-title">Family Feud</h1>
+            </div>
+
+            <div class="scoreboard">
+                <div class="team-score">
+                    <div class="team-name" id="scoreTeamA">Team A</div>
+                    <div class="score" id="scoreA">0</div>
+                </div>
+                <div class="team-score">
+                    <div class="team-name" id="scoreTeamB">Team B</div>
+                    <div class="score" id="scoreB">0</div>
+                </div>
+            </div>
+
+            <div class="game-info">
+                <div class="timer">
+                    Time: <span id="timerDisplay">40</span>s
+                </div>
+                <div class="strikes">
+                    <div class="strike-counter">
+                        <div>Team A Strikes</div>
+                        <div class="strike-display" id="strikesA">0/3</div>
+                    </div>
+                    <div class="strike-counter">
+                        <div>Team B Strikes</div>
+                        <div class="strike-display" id="strikesB">0/3</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question-area">
+                <div class="question-number" id="questionNumber">Question 1 of 3</div>
+                <div class="question-text" id="questionText">
+                    Complete the Sanskrit verse: "सत्यं वद धर्मं चर स्वाध्यायान्मा प्रमदः |" What comes next?
+                </div>
+
+                <div class="answers-grid" id="answersGrid">
+                    <div class="answer-slot" id="answer1">
+                        <span class="answer-text">_ _ _ _ _ _ _ _ _ _</span>
+                        <span class="answer-points">25</span>
+                    </div>
+                    <div class="answer-slot" id="answer2">
+                        <span class="answer-text">_ _ _ _ _ _ _ _ _ _</span>
+                        <span class="answer-points">20</span>
+                    </div>
+                    <div class="answer-slot" id="answer3">
+                        <span class="answer-text">_ _ _ _ _ _ _ _ _ _</span>
+                        <span class="answer-points">15</span>
+                    </div>
+                    <div class="answer-slot" id="answer4">
+                        <span class="answer-text">_ _ _ _ _ _ _ _ _ _</span>
+                        <span class="answer-points">10</span>
+                    </div>
+                    <div class="answer-slot" id="answer5">
+                        <span class="answer-text">_ _ _ _ _ _ _ _ _ _</span>
+                        <span class="answer-points">5</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Participant Controls -->
+            <div class="participant-controls" id="participantControls" style="display: none;">
+                <h3 style="text-align: center; margin-bottom: 20px;">Your Turn to Answer</h3>
+                <div class="answer-input">
+                    <input type="text" class="input-field" id="answerInput" placeholder="Enter your answer in Sanskrit">
+                    <button class="submit-btn" onclick="submitAnswer()">Submit Answer</button>
+                </div>
+                <div class="feedback" id="feedback"></div>
+            </div>
+
+            <!-- Host Controls -->
+            <div class="host-controls" id="hostControls" style="display: none;">
+                <h3 style="text-align: center; margin-bottom: 20px;">Host Controls</h3>
+                <div class="control-buttons">
+                    <button class="reveal-btn" onclick="revealAnswer(1)">Reveal Answer 1</button>
+                    <button class="reveal-btn" onclick="revealAnswer(2)">Reveal Answer 2</button>
+                    <button class="reveal-btn" onclick="revealAnswer(3)">Reveal Answer 3</button>
+                    <button class="reveal-btn" onclick="revealAnswer(4)">Reveal Answer 4</button>
+                    <button class="reveal-btn" onclick="revealAnswer(5)">Reveal Answer 5</button>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="next-btn" onclick="nextQuestion()">Next Question</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="gameOverScreen" class="screen">
+            <div class="game-over">
+                <div class="winner-announcement" id="winnerText">🏆 Team A Wins! 🏆</div>
+                <div class="final-scores">
+                    <div class="team-score">
+                        <div class="team-name" id="finalTeamA">Team A</div>
+                        <div class="score" id="finalScoreA">0</div>
+                    </div>
+                    <div class="team-score">
+                        <div class="team-name" id="finalTeamB">Team B</div>
+                        <div class="score" id="finalScoreB">0</div>
+                    </div>
+                </div>
+                <button class="login-btn" onclick="resetGame()">Play Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Wireframe simulation data
+        let wireframeState = {
+            userRole: null, // 'host' or 'participant'
+            userTeam: null, // 'Team A' or 'Team B'
+            userName: null,
+            participants: {
+                'Team A': [],
+                'Team B': []
+            },
+            currentQuestion: 1,
+            timer: 40,
+            timerInterval: null,
+            scores: { 'Team A': 0, 'Team B': 0 },
+            strikes: { 'Team A': 0, 'Team B': 0 },
+            questions: [
+                {
+                    question: "Complete the Sanskrit verse: 'सत्यं वद धर्मं चर स्वाध्यायान्मा प्रमदः |' What comes next?",
+                    answers: [
+                        { text: "आचार्याय प्रियं धनमाहृत्य", points: 25 },
+                        { text: "मातृदेवो भव", points: 20 },
+                        { text: "पितृदेवो भव", points: 15 },
+                        { text: "अतिथिदेवो भव", points: 10 },
+                        { text: "गुरुदेवो भव", points: 5 }
+                    ],
+                    revealed: []
+                },
+                {
+                    question: "What is the Sanskrit word for 'knowledge'?",
+                    answers: [
+                        { text: "ज्ञान", points: 25 },
+                        { text: "विद्या", points: 20 },
+                        { text: "बुद्धि", points: 15 },
+                        { text: "प्रज्ञा", points: 10 },
+                        { text: "मेधा", points: 5 }
+                    ],
+                    revealed: []
+                },
+                {
+                    question: "Complete: 'वसुधैव कुटुम्बकम्' - What does this mean?",
+                    answers: [
+                        { text: "The world is one family", points: 25 },
+                        { text: "Earth is our home", points: 20 },
+                        { text: "Unity in diversity", points: 15 },
+                        { text: "Global brotherhood", points: 10 },
+                        { text: "Universal love", points: 5 }
+                    ],
+                    revealed: []
+                }
+            ]
+        };
+
+        // Screen navigation
+        function hideAllScreens() {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+        }
+
+        function showScreen(screenId) {
+            hideAllScreens();
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function showWelcome() {
+            showScreen('welcomeScreen');
+        }
+
+        function showHostLogin() {
+            showScreen('hostLoginScreen');
+        }
+
+        function showParticipantLogin() {
+            showScreen('participantLoginScreen');
+        }
+
+        // Host login
+        function hostLogin() {
+            const username = document.getElementById('hostUsername').value;
+            const password = document.getElementById('hostPassword').value;
+
+            if (!username || !password) {
+                alert('Please enter both username and password');
+                return;
+            }
+
+            // Simulate host authentication
+            wireframeState.userRole = 'host';
+            alert('Welcome Host: ' + username + '!');
+            showScreen('teamsManagementScreen');
+        }
+
+        // Participant login
+        function participantLogin() {
+            const team = document.getElementById('teamSelect').value;
+            const name = document.getElementById('participantName').value;
+            const password = document.getElementById('participantPassword').value;
+
+            if (!team || !name || !password) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            // Simulate password check
+            if (password !== 'game123') {
+                alert('Invalid password');
+                return;
+            }
+
+            wireframeState.userRole = 'participant';
+            wireframeState.userTeam = team;
+            wireframeState.userName = name;
+
+            // Add participant to team
+            wireframeState.participants[team].push(name);
+            
+            // Update team dashboard
+            document.getElementById('currentTeamName').textContent = team;
+            updateTeamList();
+            updateTeamsManagement();
+
+            alert('Welcome to ' + team + ', ' + name + '!');
+            showScreen('teamDashboardScreen');
+        }
+
+        // Update team lists
+        function updateTeamList() {
+            const teamList = document.getElementById('currentTeamList');
+            const team = wireframeState.userTeam;
+            
+            teamList.innerHTML = '';
+            wireframeState.participants[team].forEach(participant => {
+                const item = document.createElement('div');
+                item.className = 'participant-item';
+                item.innerHTML = `
+                    <div class="status-indicator"></div>
+                    <span>${participant}</span>
+                `;
+                teamList.appendChild(item);
+            });
+        }
+
+        function updateTeamsManagement() {
+            // Update Team A list
+            const teamAList = document.getElementById('teamAList');
+            teamAList.innerHTML = '';
+            if (wireframeState.participants['Team A'].length === 0) {
+                teamAList.innerHTML = '<p style="text-align: center; color: #ccc; margin-top: 80px;">Waiting for participants...</p>';
+            } else {
+                wireframeState.participants['Team A'].forEach(participant => {
+                    const item = document.createElement('div');
+                    item.className = 'participant-item';
+                    item.innerHTML = `
+                        <div class="status-indicator"></div>
+                        <span>${participant}</span>
+                    `;
+                    teamAList.appendChild(item);
+                });
+            }
+
+            // Update Team B list
+            const teamBList = document.getElementById('teamBList');
+            teamBList.innerHTML = '';
+            if (wireframeState.participants['Team B'].length === 0) {
+                teamBList.innerHTML = '<p style="text-align: center; color: #ccc; margin-top: 80px;">Waiting for participants...</p>';
+            } else {
+                wireframeState.participants['Team B'].forEach(participant => {
+                    const item = document.createElement('div');
+                    item.className = 'participant-item';
+                    item.innerHTML = `
+                        <div class="status-indicator"></div>
+                        <span>${participant}</span>
+                    `;
+                    teamBList.appendChild(item);
+                });
+            }
+
+            // Enable/disable start button
+            const startBtn = document.getElementById('startGameBtn');
+            if (wireframeState.participants['Team A'].length > 0 && wireframeState.participants['Team B'].length > 0) {
+                startBtn.disabled = false;
+            } else {
+                startBtn.disabled = true;
+            }
+        }
+
+        // Start game
+        function startGame() {
+            if (wireframeState.participants['Team A'].length === 0 || wireframeState.participants['Team B'].length === 0) {
+                alert('Need at least one participant from each team!');
+                return;
+            }
+
+            // Initialize game
+            wireframeState.currentQuestion = 1;
+            wireframeState.timer = 40;
+            wireframeState.scores = { 'Team A': 0, 'Team B': 0 };
+            wireframeState.strikes = { 'Team A': 0, 'Team B': 0 };
+            
+            // Reset revealed answers
+            wireframeState.questions.forEach(q => q.revealed = []);
+
+            loadQuestion();
+            showScreen('gameScreen');
+            
+            // Show appropriate controls
+            if (wireframeState.userRole === 'host') {
+                document.getElementById('hostControls').style.display = 'block';
+                document.getElementById('participantControls').style.display = 'none';
+            } else {
+                document.getElementById('hostControls').style.display = 'none';
+                document.getElementById('participantControls').style.display = 'block';
+            }
+
+            startTimer();
+        }
+
+        // Load current question
+        function loadQuestion() {
+            const question = wireframeState.questions[wireframeState.currentQuestion - 1];
+            
+            document.getElementById('questionNumber').textContent = `Question ${wireframeState.currentQuestion} of 3`;
+            document.getElementById('questionText').textContent = question.question;
+            
+            // Reset answer slots
+            for (let i = 1; i <= 5; i++) {
+                const slot = document.getElementById(`answer${i}`);
+                slot.classList.remove('revealed');
+                slot.querySelector('.answer-text').textContent = '_ _ _ _ _ _ _ _ _ _';
+                slot.querySelector('.answer-points').textContent = question.answers[i-1].points;
+            }
+
+            // Update scores and strikes
+            updateScoreboard();
+            
+            // Clear input
+            const input = document.getElementById('answerInput');
+            if (input) input.value = '';
+            
+            // Hide feedback
+            const feedback = document.getElementById('feedback');
+            if (feedback) feedback.classList.remove('show');
+        }
+
+        // Timer functions
+        function startTimer() {
+            wireframeState.timer = 40;
+            updateTimerDisplay();
+            
+            wireframeState.timerInterval = setInterval(() => {
+                wireframeState.timer--;
+                updateTimerDisplay();
+                
+                if (wireframeState.timer <= 0) {
+                    clearInterval(wireframeState.timerInterval);
+                    alert('Time\'s up! Host can now reveal remaining answers.');
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            document.getElementById('timerDisplay').textContent = wireframeState.timer;
+        }
+
+        // Update scoreboard
+        function updateScoreboard() {
+            document.getElementById('scoreA').textContent = wireframeState.scores['Team A'];
+            document.getElementById('scoreB').textContent = wireframeState.scores['Team B'];
+            document.getElementById('strikesA').textContent = `${wireframeState.strikes['Team A']}/3`;
+            document.getElementById('strikesB').textContent = `${wireframeState.strikes['Team B']}/3`;
+        }
+
+        // Submit answer (participant)
+        function submitAnswer() {
+            const answer = document.getElementById('answerInput').value.trim();
+            if (!answer) {
+                alert('Please enter an answer');
+                return;
+            }
+
+            const question = wireframeState.questions[wireframeState.currentQuestion - 1];
+            let found = false;
+            let points = 0;
+            let answerIndex = -1;
+
+            // Check if answer matches
+            for (let i = 0; i < question.answers.length; i++) {
+                if (question.revealed.includes(i)) continue;
+                
+                if (answer.toLowerCase().includes(question.answers[i].text.toLowerCase()) ||
+                    question.answers[i].text.toLowerCase().includes(answer.toLowerCase())) {
+                    found = true;
+                    points = question.answers[i].points;
+                    answerIndex = i;
+                    break;
+                }
+            }
+
+            const feedback = document.getElementById('feedback');
+            
+            if (found) {
+                // Correct answer
+                question.revealed.push(answerIndex);
+                wireframeState.scores[wireframeState.userTeam] += points;
+                
+                // Reveal answer
+                const slot = document.getElementById(`answer${answerIndex + 1}`);
+                slot.classList.add('revealed');
+                slot.querySelector('.answer-text').textContent = question.answers[answerIndex].text;
+                
+                feedback.className = 'feedback correct show';
+                feedback.textContent = `Correct! +${points} points for ${wireframeState.userTeam}`;
+                
+                updateScoreboard();
+            } else {
+                // Incorrect answer
+                wireframeState.strikes[wireframeState.userTeam]++;
+                
+                feedback.className = 'feedback incorrect show';
+                feedback.textContent = `Incorrect! Strike ${wireframeState.strikes[wireframeState.userTeam]} for ${wireframeState.userTeam}`;
+                
+                updateScoreboard();
+            }
+
+            // Clear input
+            document.getElementById('answerInput').value = '';
+        }
+
+        // Reveal answer (host)
+        function revealAnswer(answerNum) {
+            const question = wireframeState.questions[wireframeState.currentQuestion - 1];
+            const answerIndex = answerNum - 1;
+            
+            if (question.revealed.includes(answerIndex)) {
+                alert('Answer already revealed!');
+                return;
+            }
+            
+            question.revealed.push(answerIndex);
+            
+            const slot = document.getElementById(`answer${answerNum}`);
+            slot.classList.add('revealed');
+            slot.querySelector('.answer-text').textContent = question.answers[answerIndex].text;
+        }
+
+        // Next question
+        function nextQuestion() {
+            if (wireframeState.timerInterval) {
+                clearInterval(wireframeState.timerInterval);
+            }
+            
+            if (wireframeState.currentQuestion < 3) {
+                wireframeState.currentQuestion++;
+                wireframeState.strikes = { 'Team A': 0, 'Team B': 0 };
+                loadQuestion();
+                startTimer();
+            } else {
+                endGame();
+            }
+        }
+
+        // End game
+        function endGame() {
+            if (wireframeState.timerInterval) {
+                clearInterval(wireframeState.timerInterval);
+            }
+            
+            const scoreA = wireframeState.scores['Team A'];
+            const scoreB = wireframeState.scores['Team B'];
+            
+            let winner;
+            if (scoreA > scoreB) {
+                winner = '🏆 Team A Wins! 🏆';
+            } else if (scoreB > scoreA) {
+                winner = '🏆 Team B Wins! 🏆';
+            } else {
+                winner = '🤝 It\'s a Tie! 🤝';
+            }
+            
+            document.getElementById('winnerText').textContent = winner;
+            document.getElementById('finalScoreA').textContent = scoreA;
+            document.getElementById('finalScoreB').textContent = scoreB;
+            
+            showScreen('gameOverScreen');
+        }
+
+        // Reset game
+        function resetGame() {
+            wireframeState = {
+                userRole: null,
+                userTeam: null,
+                userName: null,
+                participants: { 'Team A': [], 'Team B': [] },
+                currentQuestion: 1,
+                timer: 40,
+                timerInterval: null,
+                scores: { 'Team A': 0, 'Team B': 0 },
+                strikes: { 'Team A': 0, 'Team B': 0 },
+                questions: wireframeState.questions
+            };
+            
+            // Clear all inputs
+            document.querySelectorAll('input').forEach(input => input.value = '');
+            document.getElementById('teamSelect').value = '';
+            
+            showWelcome();
+        }
+
+        // Initialize wireframe
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Family Feud Interactive Wireframe Loaded');
+        });
+    </script>
+</body>
+</html>
