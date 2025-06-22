@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Feud - Team Player</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url('gameshow-background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            color: white;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 20, 40, 0.4);
+            backdrop-filter: blur(3px);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+
+        .login-card {
+            background: rgba(0, 20, 40, 0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 100, 255, 0.3);
+            border: 2px solid rgba(0, 150, 255, 0.3);
+            text-align: center;
+            min-width: 400px;
+        }
+
+        .title {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: rgba(0, 50, 100, 0.4);
+            color: white;
+            font-size: 1em;
+            border: 1px solid rgba(0, 150, 255, 0.3);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .form-group select option {
+            background: #001428;
+            color: white;
+        }
+
+        .login-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            color: white;
+            font-weight: bold;
+            margin: 10px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin: 10px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Team Dashboard */
+        .team-dashboard {
+            background: rgba(0, 20, 40, 0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            border: 2px solid rgba(0, 150, 255, 0.3);
+            text-align: center;
+        }
+
+        .team-name {
+            font-size: 2em;
+            color: #FFD700;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .waiting-message {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .team-members {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .member-item {
+            background: rgba(0, 50, 100, 0.4);
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid rgba(0, 150, 255, 0.3);
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #4CAF50;
+            box-shadow: 0 0 5px #4CAF50;
+        }
+
+        .you-indicator {
+            background: #FFD700;
+            color: #333;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            margin-left: auto;
+        }
+
+        /* Countdown */
+        .countdown-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+
+        .countdown-number {
+            font-size: 15em;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 0 0 50px rgba(255, 215, 0, 0.8);
+            animation: countdownPulse 1s ease-in-out;
+        }
+
+        @keyframes countdownPulse {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Game Screen */
+        .game-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .team-score {
+            background: rgba(0, 20, 40, 0.9);
+            backdrop-filter: blur(15px);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 180px;
+            border: 2px solid rgba(0, 150, 255, 0.4);
+            box-shadow: 0 0 20px rgba(0, 100, 255, 0.3);
+        }
+
+        .team-score.my-team {
+            border-color: #FFD700;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+
+        .score-team-name {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .score {
+            font-size: 2em;
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: rgba(0, 20, 40, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid rgba(0, 150, 255, 0.4);
+        }
+
+        .timer {
+            font-size: 2em;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .timer.warning {
+            color: #FFD700;
+            animation: timerPulse 1s infinite;
+        }
+
+        .timer.critical {
+            color: #FF0000;
+            animation: timerPulse 0.5s infinite;
+        }
+
+        @keyframes timerPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .question-area {
+            background: rgba(0, 20, 40, 0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            border: 2px solid rgba(0, 150, 255, 0.4);
+            box-shadow: 0 0 30px rgba(0, 100, 255, 0.3);
+        }
+
+        .question-number {
+            background: #FFD700;
+            color: #333;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .answers-board {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .answer-slot {
+            background: rgba(0, 20, 60, 0.8);
+            border: 3px solid #00BFFF;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 60px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .answer-slot.revealed {
+            background: linear-gradient(45deg, rgba(0, 255, 127, 0.3), rgba(0, 191, 255, 0.3));
+            border-color: #00FF7F;
+            box-shadow: 0 0 30px rgba(0, 255, 127, 0.6);
+            animation: revealGlow 1s ease-in-out;
+        }
+
+        .answer-slot.my-reveal {
+            border-color: #FFD700;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+        }
+
+        @keyframes revealGlow {
+            0% {
+                box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);
+                transform: scale(1);
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(0, 255, 127, 0.8);
+                transform: scale(1.02);
+            }
+
+            100% {
+                box-shadow: 0 0 30px rgba(0, 255, 127, 0.6);
+                transform: scale(1);
+            }
+        }
+
+        .answer-text {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .answer-points {
+            background: #FFD700;
+            color: #333;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-weight: bold;
+        }
+
+        .input-area {
+            background: rgba(0, 20, 40, 0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            border: 2px solid rgba(0, 150, 255, 0.4);
+        }
+
+        .input-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .input-field {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(0, 50, 100, 0.6);
+            color: white;
+            font-size: 1em;
+            width: 350px;
+            border: 2px solid rgba(0, 150, 255, 0.4);
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .submit-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+            color: white;
+            font-weight: bold;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .submit-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .feedback {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: rgba(76, 175, 80, 0.3);
+            border: 2px solid #4CAF50;
+            color: #4CAF50;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: rgba(244, 67, 54, 0.3);
+            border: 2px solid #F44336;
+            color: #F44336;
+            display: block;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 20, 40, 0.95);
+            border: 2px solid #4CAF50;
+            color: #4CAF50;
+            padding: 15px 20px;
+            border-radius: 10px;
+            z-index: 1000;
+            animation: slideIn 0.5s ease-out;
+            max-width: 300px;
+        }
+
+        .notification.error {
+            border-color: #F44336;
+            color: #F44336;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Game Over */
+        .game-over {
+            text-align: center;
+            padding: 50px;
+        }
+
+        .winner-announcement {
+            font-size: 3em;
+            color: #FFD700;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-30px);
+            }
+
+            60% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .final-scores {
+            display: flex;
+            justify-content: center;
+            gap: 80px;
+            margin: 40px 0;
+        }
+
+        @media (max-width: 768px) {
+            .score-board {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .input-controls {
+                flex-direction: column;
+            }
+
+            .input-field {
+                width: 100%;
+            }
+
+            .final-scores {
+                flex-direction: column;
+                gap: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Login Screen -->
+        <div id="loginScreen" class="screen active">
+            <div class="login-container">
+                <div class="login-card">
+                    <h2 class="title">Join Team</h2>
+                    <div class="form-group">
+                        <label>Select Team:</label>
+                        <select id="teamSelect">
+                            <option value="">Choose Your Team</option>
+                            <option value="Team A">🔵 Team A</option>
+                            <option value="Team B">🔴 Team B</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Your Name:</label>
+                        <input type="text" id="participantName" placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label>Team Password:</label>
+                        <input type="password" id="participantPassword" placeholder="Pre-assigned team password"
+                            value="team123">
+                    </div>
+                    <div style="text-align: center;">
+                        <button class="login-btn" onclick="participantLogin()">👥 Join Team</button>
+                        <a href="/" class="back-btn">Back to Welcome</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Dashboard Screen -->
+        <div id="teamDashboardScreen" class="screen">
+            <div class="team-dashboard">
+                <h2 class="team-name" id="currentTeamName">Team A</h2>
+                <div class="waiting-message">
+                    ✅ Successfully registered! Waiting for host to start the game...
+                </div>
+
+                <div class="team-members">
+                    <h3 style="color: #FFD700; margin-bottom: 15px;">👥 Team Members</h3>
+                    <div id="teamMembersList">
+                        <!-- Team members will be populated here -->
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="/" class="back-btn">Leave Team</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Countdown Screen -->
+        <div id="countdownScreen" class="screen">
+            <div class="countdown-screen">
+                <div class="countdown-number" id="countdownNumber">3</div>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="gameScreen" class="screen">
+            <div class="game-header">
+                <h1 class="title">Family Feud</h1>
+            </div>
+
+            <div class="score-board">
+                <div class="team-score" id="teamAScore">
+                    <div class="score-team-name">🔵 Team A</div>
+                    <div class="score" id="scoreA">0</div>
+                </div>
+                <div class="team-score" id="teamBScore">
+                    <div class="score-team-name">🔴 Team B</div>
+                    <div class="score" id="scoreB">0</div>
+                </div>
+            </div>
+
+            <div class="game-info">
+                <div class="timer" id="timerContainer">
+                    ⏱️ Timer: <span id="timerDisplay">40</span>s
+                </div>
+                <div>
+                    <strong>Question <span id="questionNumber">1</span> of 3</strong>
+                </div>
+            </div>
+
+            <div class="question-area">
+                <div class="question-text" id="questionText">
+                    Loading question...
+                </div>
+
+                <div class="answers-board" id="answersBoard">
+                    <!-- Answers will be populated here -->
+                </div>
+            </div>
+
+            <div class="input-area">
+                <h3 style="text-align: center; margin-bottom: 20px;">🎯 Submit Your Answer</h3>
+                <div class="input-controls">
+                    <input type="text" class="input-field" id="answerInput"
+                        placeholder="Enter your answer in Sanskrit or English...">
+                    <button class="submit-btn" id="submitBtn" onclick="submitAnswer()">Submit Answer</button>
+                </div>
+                <div class="feedback" id="feedback"></div>
+            </div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="gameOverScreen" class="screen">
+            <div class="game-over">
+                <div class="winner-announcement" id="winnerText">🏆 Game Over! 🏆</div>
+                <div class="final-scores">
+                    <div class="team-score">
+                        <div class="score-team-name">🔵 Team A</div>
+                        <div class="score" id="finalScoreA">0</div>
+                    </div>
+                    <div class="team-score">
+                        <div class="score-team-name">🔴 Team B</div>
+                        <div class="score" id="finalScoreB">0</div>
+                    </div>
+                </div>
+                <a href="/" class="back-btn">Back to Welcome</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        let gameState = {
+            participant: null,
+            teamMembers: [],
+            scores: { 'Team A': 0, 'Team B': 0 },
+            currentQuestion: 0
+        };
+
+        // Screen management
+        function hideAllScreens() {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+        }
+
+        function showScreen(screenId) {
+            hideAllScreens();
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // Participant login
+        function participantLogin() {
+            const teamName = document.getElementById('teamSelect').value;
+            const participantName = document.getElementById('participantName').value.trim();
+            const password = document.getElementById('participantPassword').value;
+
+            if (!teamName || !participantName || !password) {
+                showNotification('Please fill in all fields', 'error');
+                return;
+            }
+
+            if (participantName.length < 2) {
+                showNotification('Name must be at least 2 characters', 'error');
+                return;
+            }
+
+            socket.emit('participant-login', { teamName, participantName, password });
+        }
+
+        // Submit answer
+        function submitAnswer() {
+            const answer = document.getElementById('answerInput').value.trim();
+            if (!answer) {
+                showNotification('Please enter an answer', 'error');
+                return;
+            }
+
+            if (answer.length < 2) {
+                showNotification('Answer must be at least 2 characters', 'error');
+                return;
+            }
+
+            socket.emit('submit-answer', { answer });
+
+            // Disable submit button temporarily
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitted...';
+
+            setTimeout(() => {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Answer';
+            }, 2000);
+
+            // Clear input
+            document.getElementById('answerInput').value = '';
+        }
+
+        // Update team members list
+        function updateTeamMembers() {
+            const teamList = document.getElementById('teamMembersList');
+            teamList.innerHTML = '';
+
+            if (gameState.teamMembers.length === 0) {
+                teamList.innerHTML = '<p style="text-align: center; color: #ccc;">No team members yet...</p>';
+            } else {
+                gameState.teamMembers.forEach(member => {
+                    const item = document.createElement('div');
+                    item.className = 'member-item';
+
+                    const isCurrentUser = member.name === gameState.participant?.name;
+                    item.innerHTML = `
+                        <div class="status-indicator"></div>
+                        <span>${member.name}</span>
+                        ${isCurrentUser ? '<span class="you-indicator">You</span>' : ''}
+                    `;
+                    teamList.appendChild(item);
+                });
+            }
+        }
+
+        // Update scoreboard
+        function updateScoreboard() {
+            document.getElementById('scoreA').textContent = gameState.scores['Team A'];
+            document.getElementById('scoreB').textContent = gameState.scores['Team B'];
+
+            // Highlight current team's score
+            const teamAScore = document.getElementById('teamAScore');
+            const teamBScore = document.getElementById('teamBScore');
+
+            teamAScore.classList.remove('my-team');
+            teamBScore.classList.remove('my-team');
+
+            if (gameState.participant?.team === 'Team A') {
+                teamAScore.classList.add('my-team');
+            } else if (gameState.participant?.team === 'Team B') {
+                teamBScore.classList.add('my-team');
+            }
+        }
+
+        // Update question display
+        function updateQuestionDisplay(questionData) {
+            document.getElementById('questionNumber').textContent = questionData.questionNumber;
+            document.getElementById('questionText').textContent = questionData.question;
+
+            // Update answers board
+            const answersBoard = document.getElementById('answersBoard');
+            answersBoard.innerHTML = '';
+
+            questionData.answers.forEach((answer, index) => {
+                const slot = document.createElement('div');
+                slot.className = 'answer-slot';
+                slot.id = `answer${index}`;
+                slot.innerHTML = `
+                    <span class="answer-text">_ _ _ _ _ _ _ _ _ _</span>
+                    <span class="answer-points">${answer.points}</span>
+                `;
+                answersBoard.appendChild(slot);
+            });
+
+            // Clear previous feedback
+            const feedback = document.getElementById('feedback');
+            feedback.style.display = 'none';
+            feedback.className = 'feedback';
+        }
+
+        // Show countdown
+        function showCountdown() {
+            showScreen('countdownScreen');
+            let count = 3;
+            const countdownElement = document.getElementById('countdownNumber');
+
+            const countdownInterval = setInterval(() => {
+                countdownElement.textContent = count;
+                count--;
+
+                if (count < 0) {
+                    clearInterval(countdownInterval);
+                    countdownElement.textContent = 'GO!';
+                    setTimeout(() => {
+                        // Game will start via socket event
+                    }, 1000);
+                }
+            }, 1000);
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 4000);
+        }
+
+        // Socket event listeners
+        socket.on('participant-authenticated', (data) => {
+            if (data.success) {
+                gameState.participant = data.participant;
+                gameState.teamMembers = data.teamMembers;
+
+                document.getElementById('currentTeamName').textContent = data.participant.team;
+                updateTeamMembers();
+
+                showNotification(`Welcome to ${data.participant.team}, ${data.participant.name}!`);
+                showScreen('teamDashboardScreen');
+            } else {
+                showNotification(data.message || 'Login failed', 'error');
+            }
+        });
+
+        socket.on('team-updated', (teamMembers) => {
+            gameState.teamMembers = teamMembers;
+            updateTeamMembers();
+        });
+
+        socket.on('countdown-start', () => {
+            showCountdown();
+        });
+
+        socket.on('question-started', (questionData) => {
+            gameState.currentQuestion = questionData.questionNumber;
+            showScreen('gameScreen');
+            updateQuestionDisplay(questionData);
+            updateScoreboard();
+
+            // Enable input
+            document.getElementById('answerInput').disabled = false;
+            document.getElementById('submitBtn').disabled = false;
+        });
+
+        socket.on('answer-correct', (data) => {
+            // This is sent only to the team that got the answer correct
+            const slot = document.getElementById(`answer${data.answerIndex}`);
+            slot.classList.add('revealed', 'my-reveal');
+            slot.querySelector('.answer-text').textContent = data.answer.text;
+
+            gameState.scores[gameState.participant.team] = data.teamScore;
+            updateScoreboard();
+
+            const feedback = document.getElementById('feedback');
+            feedback.className = 'feedback correct';
+            feedback.textContent = `🎉 Correct! +${data.points} points! (Answered by ${data.submittedBy})`;
+            feedback.style.display = 'block';
+
+            showNotification(`Great job! +${data.points} points for your team!`);
+        });
+
+        socket.on('answer-incorrect', (data) => {
+            const feedback = document.getElementById('feedback');
+            feedback.className = 'feedback incorrect';
+            feedback.textContent = `❌ Incorrect! Strike ${data.strikes}/3 (Submitted by ${data.submittedBy})`;
+            feedback.style.display = 'block';
+
+            showNotification(`Strike ${data.strikes}! Keep trying!`, 'error');
+        });
+
+        socket.on('answer-revealed-all', (data) => {
+            // Manual reveal by host - visible to all participants
+            const slot = document.getElementById(`answer${data.answerIndex}`);
+            slot.classList.add('revealed');
+            slot.querySelector('.answer-text').textContent = data.answer.text;
+        });
+
+        socket.on('all-answers-revealed', (data) => {
+            data.answers.forEach((answer, index) => {
+                const slot = document.getElementById(`answer${index}`);
+                slot.classList.add('revealed');
+                slot.querySelector('.answer-text').textContent = answer.text;
+            });
+
+            showNotification('All answers revealed by host!');
+        });
+
+        socket.on('team-eliminated', (data) => {
+            if (data.strikes) {
+                showNotification('Your team has been eliminated with 3 strikes!', 'error');
+
+                // Disable input
+                document.getElementById('answerInput').disabled = true;
+                document.getElementById('submitBtn').disabled = true;
+            }
+        });
+
+        socket.on('timer-update', (timer) => {
+            const timerDisplay = document.getElementById('timerDisplay');
+            const timerContainer = document.getElementById('timerContainer');
+
+            timerDisplay.textContent = timer;
+
+            timerContainer.className = 'timer';
+            if (timer <= 10) {
+                timerContainer.classList.add('critical');
+            } else if (timer <= 20) {
+                timerContainer.classList.add('warning');
+            }
+        });
+
+        socket.on('timer-expired', () => {
+            showNotification('Time expired! Waiting for host to reveal answers.', 'error');
+
+            // Disable input
+            document.getElementById('answerInput').disabled = true;
+            document.getElementById('submitBtn').disabled = true;
+        });
+
+        socket.on('game-ended', (data) => {
+            gameState.scores = data.scores;
+
+            document.getElementById('finalScoreA').textContent = data.scores['Team A'];
+            document.getElementById('finalScoreB').textContent = data.scores['Team B'];
+
+            let winnerText;
+            if (data.winner === 'Team A') {
+                winnerText = '🏆 Team A Wins! 🏆';
+            } else if (data.winner === 'Team B') {
+                winnerText = '🏆 Team B Wins! 🏆';
+            } else {
+                winnerText = '🤝 It\'s a Tie! 🤝';
+            }
+
+            document.getElementById('winnerText').textContent = winnerText;
+
+            // Show special message for winning team
+            if (data.winner === gameState.participant?.team) {
+                showNotification('🎉 Congratulations! Your team won!');
+            } else if (data.winner === 'Tie') {
+                showNotification('🤝 Great game! It\'s a tie!');
+            } else {
+                showNotification('Good effort! Better luck next time!');
+            }
+
+            showScreen('gameOverScreen');
+        });
+
+        socket.on('host-disconnected', () => {
+            showNotification('Host disconnected. Game ended.', 'error');
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 3000);
+        });
+
+        socket.on('disconnect', () => {
+            showNotification('Connection lost. Please refresh the page.', 'error');
+        });
+
+        // Handle Enter key for answer submission
+        document.addEventListener('DOMContentLoaded', function () {
+            const answerInput = document.getElementById('answerInput');
+            if (answerInput) {
+                answerInput.addEventListener('keypress', function (e) {
+                    if (e.key === 'Enter' && !document.getElementById('submitBtn').disabled) {
+                        submitAnswer();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

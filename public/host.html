@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Feud - Host Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url('gameshow-background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            color: white;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 20, 40, 0.4);
+            backdrop-filter: blur(3px);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+
+        .login-card {
+            background: rgba(0, 20, 40, 0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 100, 255, 0.3);
+            border: 2px solid rgba(0, 150, 255, 0.3);
+            text-align: center;
+            min-width: 400px;
+        }
+
+        .title {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: rgba(0, 50, 100, 0.4);
+            color: white;
+            font-size: 1em;
+            border: 1px solid rgba(0, 150, 255, 0.3);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .login-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #333;
+            font-weight: bold;
+            margin: 10px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Teams Management */
+        .teams-management {
+            background: rgba(0, 20, 40, 0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            border: 2px solid rgba(0, 150, 255, 0.3);
+        }
+
+        .minimum-players {
+            background: rgba(255, 193, 7, 0.2);
+            border: 2px solid #FFC107;
+            color: #FFC107;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .teams-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .team-panel {
+            background: rgba(0, 20, 60, 0.6);
+            border: 2px solid rgba(0, 150, 255, 0.4);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 0 20px rgba(0, 100, 255, 0.2);
+        }
+
+        .team-title {
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #FFD700;
+            font-weight: bold;
+        }
+
+        .participant-list {
+            min-height: 150px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .participant-item {
+            background: rgba(0, 50, 100, 0.4);
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid rgba(0, 150, 255, 0.3);
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #4CAF50;
+            box-shadow: 0 0 5px #4CAF50;
+        }
+
+        .start-game-btn {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 30px auto;
+        }
+
+        .start-game-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .start-game-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Game Screen */
+        .game-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .team-score {
+            background: rgba(0, 20, 40, 0.9);
+            backdrop-filter: blur(15px);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 200px;
+            border: 2px solid rgba(0, 150, 255, 0.4);
+            box-shadow: 0 0 20px rgba(0, 100, 255, 0.3);
+        }
+
+        .team-name {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .score {
+            font-size: 2em;
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        .strikes {
+            font-size: 0.9em;
+            color: #FF6B6B;
+            margin-top: 5px;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: rgba(0, 20, 40, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid rgba(0, 150, 255, 0.4);
+        }
+
+        .timer {
+            font-size: 2em;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .timer.warning {
+            color: #FFD700;
+            animation: timerPulse 1s infinite;
+        }
+
+        .timer.critical {
+            color: #FF0000;
+            animation: timerPulse 0.5s infinite;
+        }
+
+        @keyframes timerPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .question-area {
+            background: rgba(0, 20, 40, 0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            border: 2px solid rgba(0, 150, 255, 0.4);
+            box-shadow: 0 0 30px rgba(0, 100, 255, 0.3);
+        }
+
+        .question-number {
+            background: #FFD700;
+            color: #333;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .answers-board {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .answer-slot {
+            background: rgba(0, 20, 60, 0.8);
+            border: 3px solid #00BFFF;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 60px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .answer-slot.revealed {
+            background: linear-gradient(45deg, rgba(0, 255, 127, 0.3), rgba(0, 191, 255, 0.3));
+            border-color: #00FF7F;
+            box-shadow: 0 0 30px rgba(0, 255, 127, 0.6);
+            animation: revealGlow 1s ease-in-out;
+        }
+
+        @keyframes revealGlow {
+            0% {
+                box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);
+                transform: scale(1);
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(0, 255, 127, 0.8);
+                transform: scale(1.02);
+            }
+
+            100% {
+                box-shadow: 0 0 30px rgba(0, 255, 127, 0.6);
+                transform: scale(1);
+            }
+        }
+
+        .answer-text {
+            font-size: 1.1em;
+            font-weight: bold;
+            flex-grow: 1;
+        }
+
+        .answer-points {
+            background: #FFD700;
+            color: #333;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .team-reveal {
+            background: rgba(0, 255, 127, 0.2);
+            border: 1px solid #00FF7F;
+            color: #00FF7F;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+
+        .host-controls {
+            background: rgba(0, 20, 40, 0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 2px solid rgba(0, 150, 255, 0.4);
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .reveal-btn,
+        .next-btn,
+        .end-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            color: white;
+            font-weight: bold;
+        }
+
+        .reveal-btn {
+            background: linear-gradient(45deg, #4ECDC4, #44A08D);
+        }
+
+        .next-btn {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #333;
+        }
+
+        .end-btn {
+            background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+        }
+
+        .reveal-btn:hover,
+        .next-btn:hover,
+        .end-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Game Over */
+        .game-over {
+            text-align: center;
+            padding: 50px;
+        }
+
+        .winner-announcement {
+            font-size: 3em;
+            color: #FFD700;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-30px);
+            }
+
+            60% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .final-scores {
+            display: flex;
+            justify-content: center;
+            gap: 100px;
+            margin: 40px 0;
+        }
+
+        .back-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 20, 40, 0.95);
+            border: 2px solid #4CAF50;
+            color: #4CAF50;
+            padding: 15px 20px;
+            border-radius: 10px;
+            z-index: 1000;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .notification.error {
+            border-color: #F44336;
+            color: #F44336;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .teams-container {
+                grid-template-columns: 1fr;
+            }
+
+            .score-board {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .control-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Login Screen -->
+        <div id="loginScreen" class="screen active">
+            <div class="login-container">
+                <div class="login-card">
+                    <h2 class="title">Host Dashboard</h2>
+                    <div class="form-group">
+                        <label>Username:</label>
+                        <input type="text" id="hostUsername" placeholder="Enter host username" value="gamehost">
+                    </div>
+                    <div class="form-group">
+                        <label>Password:</label>
+                        <input type="password" id="hostPassword" placeholder="Enter password" value="host123">
+                    </div>
+                    <div style="text-align: center;">
+                        <button class="login-btn" onclick="hostLogin()">🎮 Login as Host</button>
+                        <a href="/" class="back-btn">Back to Welcome</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teams Management Screen -->
+        <div id="teamsManagementScreen" class="screen">
+            <div class="teams-management">
+                <h2 class="title" style="text-align: center; margin-bottom: 20px;">🎯 Teams Management Dashboard</h2>
+
+                <div class="minimum-players">
+                    ⚠️ Minimum 1 participant required from each team to start the game
+                </div>
+
+                <div class="teams-container">
+                    <div class="team-panel">
+                        <h3 class="team-title">🔵 Team A</h3>
+                        <div class="participant-list" id="teamAList">
+                            <p style="text-align: center; color: #ccc; margin-top: 50px;">Waiting for participants to
+                                join...</p>
+                        </div>
+                    </div>
+                    <div class="team-panel">
+                        <h3 class="team-title">🔴 Team B</h3>
+                        <div class="participant-list" id="teamBList">
+                            <p style="text-align: center; color: #ccc; margin-top: 50px;">Waiting for participants to
+                                join...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="start-game-btn" id="startGameBtn" onclick="startGame()" disabled>
+                    🚀 Start Game
+                </button>
+
+                <div style="text-align: center;">
+                    <a href="/" class="back-btn">Back to Welcome</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="gameScreen" class="screen">
+            <div class="game-header">
+                <h1 class="title">🎮 Host Control Panel</h1>
+            </div>
+
+            <div class="score-board">
+                <div class="team-score">
+                    <div class="team-name">🔵 Team A</div>
+                    <div class="score" id="scoreA">0</div>
+                    <div class="strikes" id="strikesA">❌ Strikes: 0/3</div>
+                </div>
+                <div class="team-score">
+                    <div class="team-name">🔴 Team B</div>
+                    <div class="score" id="scoreB">0</div>
+                    <div class="strikes" id="strikesB">❌ Strikes: 0/3</div>
+                </div>
+            </div>
+
+            <div class="game-info">
+                <div class="timer" id="timerContainer">
+                    ⏱️ Timer: <span id="timerDisplay">40</span>s
+                </div>
+                <div>
+                    <strong>Question <span id="questionNumber">1</span> of 3</strong>
+                </div>
+            </div>
+
+            <div class="question-area">
+                <div class="question-text" id="questionText">
+                    Loading question...
+                </div>
+
+                <div class="answers-board" id="answersBoard">
+                    <!-- Answers will be populated here -->
+                </div>
+            </div>
+
+            <div class="host-controls">
+                <h3 style="text-align: center; margin-bottom: 20px;">🎮 Host Controls</h3>
+                <div class="control-buttons" id="revealButtons">
+                    <!-- Reveal buttons will be populated here -->
+                </div>
+                <div style="text-align: center;">
+                    <button class="reveal-btn" onclick="revealAllAnswers()">🔍 Reveal All Answers</button>
+                    <button class="next-btn" onclick="nextQuestion()">⏭️ Next Question</button>
+                    <button class="end-btn" onclick="endGame()">🏁 End Game</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="gameOverScreen" class="screen">
+            <div class="game-over">
+                <div class="winner-announcement" id="winnerText">🏆 Game Over! 🏆</div>
+                <div class="final-scores">
+                    <div class="team-score">
+                        <div class="team-name">🔵 Team A</div>
+                        <div class="score" id="finalScoreA">0</div>
+                    </div>
+                    <div class="team-score">
+                        <div class="team-name">🔴 Team B</div>
+                        <div class="score" id="finalScoreB">0</div>
+                    </div>
+                </div>
+                <button class="login-btn" onclick="resetGame()">🔄 New Game</button>
+                <a href="/" class="back-btn">Back to Welcome</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        let gameState = {
+            participants: { 'Team A': [], 'Team B': [] },
+            scores: { 'Team A': 0, 'Team B': 0 },
+            strikes: { 'Team A': 0, 'Team B': 0 },
+            currentQuestion: 0,
+            questions: []
+        };
+
+        // Screen management
+        function hideAllScreens() {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+        }
+
+        function showScreen(screenId) {
+            hideAllScreens();
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // Host login
+        function hostLogin() {
+            const username = document.getElementById('hostUsername').value;
+            const password = document.getElementById('hostPassword').value;
+
+            if (!username || !password) {
+                showNotification('Please enter both username and password', 'error');
+                return;
+            }
+
+            socket.emit('host-login', { username, password });
+        }
+
+        // Start game
+        function startGame() {
+            if (gameState.participants['Team A'].length === 0 || gameState.participants['Team B'].length === 0) {
+                showNotification('Need at least one participant from each team!', 'error');
+                return;
+            }
+
+            socket.emit('start-game');
+        }
+
+        // Manual reveal
+        function revealAnswer(answerIndex) {
+            socket.emit('manual-reveal', { answerIndex });
+        }
+
+        // Reveal all answers
+        function revealAllAnswers() {
+            socket.emit('reveal-all');
+        }
+
+        // Next question
+        function nextQuestion() {
+            socket.emit('next-question');
+        }
+
+        // End game
+        function endGame() {
+            if (confirm('Are you sure you want to end the game?')) {
+                socket.emit('end-game');
+            }
+        }
+
+        // Reset game
+        function resetGame() {
+            location.reload();
+        }
+
+        // Update teams display
+        function updateTeamsDisplay() {
+            // Update Team A
+            const teamAList = document.getElementById('teamAList');
+            teamAList.innerHTML = '';
+            if (gameState.participants['Team A'].length === 0) {
+                teamAList.innerHTML = '<p style="text-align: center; color: #ccc; margin-top: 50px;">Waiting for participants to join...</p>';
+            } else {
+                gameState.participants['Team A'].forEach(participant => {
+                    const item = document.createElement('div');
+                    item.className = 'participant-item';
+                    item.innerHTML = `
+                        <div class="status-indicator"></div>
+                        <span>${participant.name}</span>
+                    `;
+                    teamAList.appendChild(item);
+                });
+            }
+
+            // Update Team B
+            const teamBList = document.getElementById('teamBList');
+            teamBList.innerHTML = '';
+            if (gameState.participants['Team B'].length === 0) {
+                teamBList.innerHTML = '<p style="text-align: center; color: #ccc; margin-top: 50px;">Waiting for participants to join...</p>';
+            } else {
+                gameState.participants['Team B'].forEach(participant => {
+                    const item = document.createElement('div');
+                    item.className = 'participant-item';
+                    item.innerHTML = `
+                        <div class="status-indicator"></div>
+                        <span>${participant.name}</span>
+                    `;
+                    teamBList.appendChild(item);
+                });
+            }
+
+            // Update start button
+            const startBtn = document.getElementById('startGameBtn');
+            const canStart = gameState.participants['Team A'].length > 0 && gameState.participants['Team B'].length > 0;
+            startBtn.disabled = !canStart;
+
+            if (canStart) {
+                startBtn.textContent = '🚀 Start Game';
+            } else {
+                startBtn.textContent = '⏳ Waiting for participants...';
+            }
+        }
+
+        // Update scoreboard
+        function updateScoreboard() {
+            document.getElementById('scoreA').textContent = gameState.scores['Team A'];
+            document.getElementById('scoreB').textContent = gameState.scores['Team B'];
+            document.getElementById('strikesA').textContent = `❌ Strikes: ${gameState.strikes['Team A']}/3`;
+            document.getElementById('strikesB').textContent = `❌ Strikes: ${gameState.strikes['Team B']}/3`;
+        }
+
+        // Update question display
+        function updateQuestionDisplay(questionData) {
+            document.getElementById('questionNumber').textContent = questionData.questionNumber;
+            document.getElementById('questionText').textContent = questionData.question;
+
+            // Update answers board
+            const answersBoard = document.getElementById('answersBoard');
+            answersBoard.innerHTML = '';
+
+            questionData.answers.forEach((answer, index) => {
+                const slot = document.createElement('div');
+                slot.className = 'answer-slot';
+                slot.id = `answer${index}`;
+                slot.innerHTML = `
+                    <span class="answer-text">_ _ _ _ _ _ _ _ _ _</span>
+                    <span class="answer-points">${answer.points}</span>
+                `;
+                answersBoard.appendChild(slot);
+            });
+
+            // Update reveal buttons
+            const revealButtons = document.getElementById('revealButtons');
+            revealButtons.innerHTML = '';
+            questionData.answers.forEach((answer, index) => {
+                const button = document.createElement('button');
+                button.className = 'reveal-btn';
+                button.textContent = `Reveal #${index + 1}`;
+                button.onclick = () => revealAnswer(index);
+                revealButtons.appendChild(button);
+            });
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Socket event listeners
+        socket.on('host-authenticated', (data) => {
+            if (data.success) {
+                gameState.participants = data.gameState.participants;
+                gameState.scores = data.gameState.scores;
+                gameState.strikes = data.gameState.strikes;
+
+                showNotification('Host authenticated successfully!');
+                showScreen('teamsManagementScreen');
+                updateTeamsDisplay();
+            } else {
+                showNotification('Invalid credentials', 'error');
+            }
+        });
+
+        socket.on('participants-updated', (participants) => {
+            gameState.participants = participants;
+            updateTeamsDisplay();
+        });
+
+        socket.on('question-started', (questionData) => {
+            gameState.currentQuestion = questionData.questionNumber;
+            showScreen('gameScreen');
+            updateQuestionDisplay(questionData);
+            updateScoreboard();
+        });
+
+        socket.on('answer-revealed', (data) => {
+            const slot = document.getElementById(`answer${data.answerIndex}`);
+            slot.classList.add('revealed');
+            slot.querySelector('.answer-text').textContent = data.answer.text;
+
+            // Add team indicator
+            const teamReveal = document.createElement('span');
+            teamReveal.className = 'team-reveal';
+            teamReveal.textContent = `${data.team} - ${data.submittedBy}`;
+            slot.appendChild(teamReveal);
+
+            gameState.scores = data.scores;
+            updateScoreboard();
+
+            showNotification(`${data.team} scored ${data.points} points!`);
+        });
+
+        socket.on('strike-updated', (data) => {
+            gameState.strikes[data.team] = data.strikes;
+            updateScoreboard();
+            showNotification(`${data.team} received a strike! (${data.strikes}/3)`, 'error');
+        });
+
+        socket.on('team-eliminated', (data) => {
+            showNotification(`${data.team} eliminated with 3 strikes!`, 'error');
+        });
+
+        socket.on('timer-update', (timer) => {
+            const timerDisplay = document.getElementById('timerDisplay');
+            const timerContainer = document.getElementById('timerContainer');
+
+            timerDisplay.textContent = timer;
+
+            timerContainer.className = 'timer';
+            if (timer <= 10) {
+                timerContainer.classList.add('critical');
+            } else if (timer <= 20) {
+                timerContainer.classList.add('warning');
+            }
+        });
+
+        socket.on('timer-expired', () => {
+            showNotification('Time expired! You can now reveal remaining answers.', 'error');
+        });
+
+        socket.on('all-answers-revealed', (data) => {
+            data.answers.forEach((answer, index) => {
+                const slot = document.getElementById(`answer${index}`);
+                slot.classList.add('revealed');
+                slot.querySelector('.answer-text').textContent = answer.text;
+            });
+        });
+
+        socket.on('game-ended', (data) => {
+            document.getElementById('finalScoreA').textContent = data.scores['Team A'];
+            document.getElementById('finalScoreB').textContent = data.scores['Team B'];
+
+            let winnerText;
+            if (data.winner === 'Team A') {
+                winnerText = '🏆 Team A Wins! 🏆';
+            } else if (data.winner === 'Team B') {
+                winnerText = '🏆 Team B Wins! 🏆';
+            } else {
+                winnerText = '🤝 It\'s a Tie! 🤝';
+            }
+
+            document.getElementById('winnerText').textContent = winnerText;
+            showScreen('gameOverScreen');
+        });
+
+        socket.on('game-start-failed', (message) => {
+            showNotification(message, 'error');
+        });
+
+        socket.on('disconnect', () => {
+            showNotification('Connection lost. Please refresh the page.', 'error');
+        });
+    </script>
+</body>
+
+</html>
