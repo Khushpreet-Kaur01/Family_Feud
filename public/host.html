@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Family Feud - Host Dashboard</title>
+    <title>शब्द संवाद - Host Dashboard</title>
     <style>
         * {
             margin: 0;
@@ -22,6 +22,7 @@
             min-height: 100vh;
             color: white;
             position: relative;
+            overflow-x: hidden;
         }
 
         body::before {
@@ -39,7 +40,8 @@
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 10px;
+            min-height: 100vh;
         }
 
         .screen {
@@ -145,7 +147,7 @@
             border: 2px solid rgba(0, 150, 255, 0.3);
         }
 
-        .minimum-players {
+        .welcome-message {
             background: rgba(255, 193, 7, 0.2);
             border: 2px solid #FFC107;
             color: #FFC107;
@@ -154,6 +156,7 @@
             margin: 20px 0;
             text-align: center;
             font-weight: bold;
+            font-size: 1.5em;
         }
 
         .teams-container {
@@ -224,49 +227,53 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         }
 
-        .start-game-btn:disabled {
-            background: #666;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
+        /* Game Screen - Optimized for no scrolling */
+        .game-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
         }
 
-        /* Game Screen */
         .game-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
+        }
+
+        .game-header .title {
+            font-size: 2em;
         }
 
         .score-board {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
         }
 
         .team-score {
             background: rgba(0, 20, 40, 0.9);
             backdrop-filter: blur(15px);
-            padding: 20px;
+            padding: 15px;
             border-radius: 15px;
             text-align: center;
-            min-width: 200px;
+            min-width: 180px;
             border: 2px solid rgba(0, 150, 255, 0.4);
             box-shadow: 0 0 20px rgba(0, 100, 255, 0.3);
         }
 
         .team-name {
-            font-size: 1.2em;
-            margin-bottom: 10px;
+            font-size: 1.1em;
+            margin-bottom: 8px;
         }
 
         .score {
-            font-size: 2em;
+            font-size: 1.8em;
             font-weight: bold;
             color: #FFD700;
         }
 
         .strikes {
-            font-size: 0.9em;
+            font-size: 0.8em;
             color: #FF6B6B;
             margin-top: 5px;
         }
@@ -275,15 +282,15 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             background: rgba(0, 20, 40, 0.9);
-            padding: 20px;
+            padding: 15px;
             border-radius: 15px;
             border: 2px solid rgba(0, 150, 255, 0.4);
         }
 
         .timer {
-            font-size: 2em;
+            font-size: 1.5em;
             font-weight: bold;
             color: #4CAF50;
         }
@@ -314,11 +321,14 @@
             background: rgba(0, 20, 40, 0.9);
             backdrop-filter: blur(15px);
             border-radius: 15px;
-            padding: 30px;
+            padding: 20px;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             border: 2px solid rgba(0, 150, 255, 0.4);
             box-shadow: 0 0 30px rgba(0, 100, 255, 0.3);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .question-number {
@@ -328,31 +338,32 @@
             border-radius: 20px;
             font-weight: bold;
             display: inline-block;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .question-text {
-            font-size: 1.5em;
-            margin-bottom: 20px;
+            font-size: 1.2em;
+            margin-bottom: 15px;
             line-height: 1.4;
         }
 
         .answers-board {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 10px;
-            margin: 20px 0;
+            gap: 8px;
+            margin: 15px 0;
+            flex-grow: 1;
         }
 
         .answer-slot {
             background: rgba(0, 20, 60, 0.8);
             border: 3px solid #00BFFF;
             border-radius: 10px;
-            padding: 15px;
+            padding: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            min-height: 60px;
+            min-height: 50px;
             transition: all 0.3s ease;
             box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);
             backdrop-filter: blur(10px);
@@ -383,7 +394,7 @@
         }
 
         .answer-text {
-            font-size: 1.1em;
+            font-size: 1em;
             font-weight: bold;
             flex-grow: 1;
         }
@@ -391,7 +402,7 @@
         .answer-points {
             background: #FFD700;
             color: #333;
-            padding: 5px 15px;
+            padding: 5px 12px;
             border-radius: 15px;
             font-weight: bold;
             margin-left: 10px;
@@ -411,27 +422,26 @@
             background: rgba(0, 20, 40, 0.9);
             backdrop-filter: blur(15px);
             border-radius: 15px;
-            padding: 20px;
-            margin-top: 20px;
+            padding: 15px;
             border: 2px solid rgba(0, 150, 255, 0.4);
         }
 
         .control-buttons {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             justify-content: center;
             flex-wrap: wrap;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .reveal-btn,
         .next-btn,
         .end-btn {
-            padding: 12px 25px;
+            padding: 8px 15px;
             border: none;
-            border-radius: 25px;
+            border-radius: 20px;
             cursor: pointer;
-            font-size: 1em;
+            font-size: 0.9em;
             transition: all 0.3s ease;
             color: white;
             font-weight: bold;
@@ -460,11 +470,15 @@
         /* Game Over */
         .game-over {
             text-align: center;
-            padding: 50px;
+            padding: 30px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .winner-announcement {
-            font-size: 3em;
+            font-size: 2.5em;
             color: #FFD700;
             margin-bottom: 20px;
             animation: bounce 2s infinite;
@@ -492,8 +506,33 @@
         .final-scores {
             display: flex;
             justify-content: center;
-            gap: 100px;
-            margin: 40px 0;
+            gap: 80px;
+            margin: 30px 0;
+        }
+
+        .team-answers {
+            background: rgba(0, 20, 40, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid rgba(0, 150, 255, 0.4);
+        }
+
+        .team-answers h3 {
+            color: #FFD700;
+            margin-bottom: 15px;
+        }
+
+        .answer-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .answer-item {
+            background: rgba(0, 50, 100, 0.4);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 150, 255, 0.3);
         }
 
         .back-btn {
@@ -506,6 +545,8 @@
             font-size: 1.1em;
             margin: 10px;
             transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .back-btn:hover {
@@ -550,12 +591,17 @@
 
             .score-board {
                 flex-direction: column;
-                gap: 20px;
+                gap: 15px;
             }
 
             .control-buttons {
                 flex-direction: column;
                 align-items: center;
+            }
+
+            .final-scores {
+                flex-direction: column;
+                gap: 30px;
             }
         }
     </style>
@@ -567,7 +613,7 @@
         <div id="loginScreen" class="screen active">
             <div class="login-container">
                 <div class="login-card">
-                    <h2 class="title">Host Dashboard</h2>
+                    <h2 class="title">शब्द संवाद</h2>
                     <div class="form-group">
                         <label>Username:</label>
                         <input type="text" id="hostUsername" placeholder="Enter host username" value="gamehost">
@@ -589,8 +635,8 @@
             <div class="teams-management">
                 <h2 class="title" style="text-align: center; margin-bottom: 20px;">🎯 Teams Management Dashboard</h2>
 
-                <div class="minimum-players">
-                    ⚠️ Minimum 1 participant required from each team to start the game
+                <div class="welcome-message">
+                    सुस्वागतम्
                 </div>
 
                 <div class="teams-container">
@@ -610,7 +656,7 @@
                     </div>
                 </div>
 
-                <button class="start-game-btn" id="startGameBtn" onclick="startGame()" disabled>
+                <button class="start-game-btn" id="startGameBtn" onclick="startGame()">
                     🚀 Start Game
                 </button>
 
@@ -622,51 +668,53 @@
 
         <!-- Game Screen -->
         <div id="gameScreen" class="screen">
-            <div class="game-header">
-                <h1 class="title">🎮 Host Control Panel</h1>
-            </div>
-
-            <div class="score-board">
-                <div class="team-score">
-                    <div class="team-name">🔵 Team A</div>
-                    <div class="score" id="scoreA">0</div>
-                    <div class="strikes" id="strikesA">❌ Strikes: 0/3</div>
-                </div>
-                <div class="team-score">
-                    <div class="team-name">🔴 Team B</div>
-                    <div class="score" id="scoreB">0</div>
-                    <div class="strikes" id="strikesB">❌ Strikes: 0/3</div>
-                </div>
-            </div>
-
-            <div class="game-info">
-                <div class="timer" id="timerContainer">
-                    ⏱️ Timer: <span id="timerDisplay">40</span>s
-                </div>
-                <div>
-                    <strong>Question <span id="questionNumber">1</span> of 3</strong>
-                </div>
-            </div>
-
-            <div class="question-area">
-                <div class="question-text" id="questionText">
-                    Loading question...
+            <div class="game-container">
+                <div class="game-header">
+                    <h1 class="title">🎮 शब्द संवाद - Host Control</h1>
                 </div>
 
-                <div class="answers-board" id="answersBoard">
-                    <!-- Answers will be populated here -->
+                <div class="score-board">
+                    <div class="team-score">
+                        <div class="team-name">🔵 Team A</div>
+                        <div class="score" id="scoreA">0</div>
+                        <div class="strikes" id="strikesA">❌ Strikes: 0/3</div>
+                    </div>
+                    <div class="team-score">
+                        <div class="team-name">🔴 Team B</div>
+                        <div class="score" id="scoreB">0</div>
+                        <div class="strikes" id="strikesB">❌ Strikes: 0/3</div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="host-controls">
-                <h3 style="text-align: center; margin-bottom: 20px;">🎮 Host Controls</h3>
-                <div class="control-buttons" id="revealButtons">
-                    <!-- Reveal buttons will be populated here -->
+                <div class="game-info">
+                    <div class="timer" id="timerContainer">
+                        ⏱️ Timer: <span id="timerDisplay">40</span>s
+                    </div>
+                    <div>
+                        <strong>Question <span id="questionNumber">1</span> of 3</strong>
+                    </div>
                 </div>
-                <div style="text-align: center;">
-                    <button class="reveal-btn" onclick="revealAllAnswers()">🔍 Reveal All Answers</button>
-                    <button class="next-btn" onclick="nextQuestion()">⏭️ Next Question</button>
-                    <button class="end-btn" onclick="endGame()">🏁 End Game</button>
+
+                <div class="question-area">
+                    <div class="question-text" id="questionText">
+                        Loading question...
+                    </div>
+
+                    <div class="answers-board" id="answersBoard">
+                        <!-- Answers will be populated here -->
+                    </div>
+                </div>
+
+                <div class="host-controls">
+                    <h3 style="text-align: center; margin-bottom: 15px;">🎮 Host Controls</h3>
+                    <div class="control-buttons" id="revealButtons">
+                        <!-- Reveal buttons will be populated here -->
+                    </div>
+                    <div style="text-align: center;">
+                        <button class="reveal-btn" onclick="revealAllAnswers()">🔍 Reveal All</button>
+                        <button class="next-btn" onclick="nextQuestion()">⏭️ Next Question</button>
+                        <button class="end-btn" onclick="endGame()">🏁 End Game</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -685,11 +733,31 @@
                         <div class="score" id="finalScoreB">0</div>
                     </div>
                 </div>
+
+                <div class="team-answers">
+                    <h3>📝 Team Answers Summary</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <h4 style="color: #4ECDC4; margin-bottom: 10px;">🔵 Team A Answers</h4>
+                            <div class="answer-list" id="teamAAnswers"></div>
+                        </div>
+                        <div>
+                            <h4 style="color: #FF6B6B; margin-bottom: 10px;">🔴 Team B Answers</h4>
+                            <div class="answer-list" id="teamBAnswers"></div>
+                        </div>
+                    </div>
+                </div>
+
                 <button class="login-btn" onclick="resetGame()">🔄 New Game</button>
                 <a href="/" class="back-btn">Back to Welcome</a>
             </div>
         </div>
     </div>
+
+    <!-- Background Music -->
+    <audio id="backgroundMusic" loop>
+        <source src="https://www.soundjay.com/misc/sounds/game-show-theme.mp3" type="audio/mpeg">
+    </audio>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
@@ -699,8 +767,16 @@
             scores: { 'Team A': 0, 'Team B': 0 },
             strikes: { 'Team A': 0, 'Team B': 0 },
             currentQuestion: 0,
-            questions: []
+            questions: [],
+            teamAnswers: { 'Team A': [], 'Team B': [] }
         };
+
+        // Start background music
+        document.addEventListener('click', function () {
+            const music = document.getElementById('backgroundMusic');
+            music.volume = 0.2;
+            music.play().catch(e => console.log('Audio play failed:', e));
+        }, { once: true });
 
         // Screen management
         function hideAllScreens() {
@@ -729,11 +805,6 @@
 
         // Start game
         function startGame() {
-            if (gameState.participants['Team A'].length === 0 || gameState.participants['Team B'].length === 0) {
-                showNotification('Need at least one participant from each team!', 'error');
-                return;
-            }
-
             socket.emit('start-game');
         }
 
@@ -799,17 +870,6 @@
                     teamBList.appendChild(item);
                 });
             }
-
-            // Update start button
-            const startBtn = document.getElementById('startGameBtn');
-            const canStart = gameState.participants['Team A'].length > 0 && gameState.participants['Team B'].length > 0;
-            startBtn.disabled = !canStart;
-
-            if (canStart) {
-                startBtn.textContent = '🚀 Start Game';
-            } else {
-                startBtn.textContent = '⏳ Waiting for participants...';
-            }
         }
 
         // Update scoreboard
@@ -834,19 +894,19 @@
                 slot.className = 'answer-slot';
                 slot.id = `answer${index}`;
                 slot.innerHTML = `
-                    <span class="answer-text">_ _ _ _ _ _ _ _ _ _</span>
+                    <span class="answer-text">${index + 1}. _ _ _ _ _ _ _ _ _ _</span>
                     <span class="answer-points">${answer.points}</span>
                 `;
                 answersBoard.appendChild(slot);
             });
 
-            // Update reveal buttons
+            // Update reveal buttons with actual answers
             const revealButtons = document.getElementById('revealButtons');
             revealButtons.innerHTML = '';
-            questionData.answers.forEach((answer, index) => {
+            questionData.fullAnswers.forEach((answer, index) => {
                 const button = document.createElement('button');
                 button.className = 'reveal-btn';
-                button.textContent = `Reveal #${index + 1}`;
+                button.textContent = `${index + 1}. ${answer.text}`;
                 button.onclick = () => revealAnswer(index);
                 revealButtons.appendChild(button);
             });
@@ -894,7 +954,7 @@
         socket.on('answer-revealed', (data) => {
             const slot = document.getElementById(`answer${data.answerIndex}`);
             slot.classList.add('revealed');
-            slot.querySelector('.answer-text').textContent = data.answer.text;
+            slot.querySelector('.answer-text').textContent = `${data.answerIndex + 1}. ${data.answer.text}`;
 
             // Add team indicator
             const teamReveal = document.createElement('span');
@@ -905,12 +965,36 @@
             gameState.scores = data.scores;
             updateScoreboard();
 
+            // Store team answer
+            if (!gameState.teamAnswers[data.team]) {
+                gameState.teamAnswers[data.team] = [];
+            }
+            gameState.teamAnswers[data.team].push({
+                question: gameState.currentQuestion,
+                answer: data.submittedAnswer,
+                correct: true,
+                points: data.points,
+                submittedBy: data.submittedBy
+            });
+
             showNotification(`${data.team} scored ${data.points} points!`);
         });
 
         socket.on('strike-updated', (data) => {
             gameState.strikes[data.team] = data.strikes;
             updateScoreboard();
+
+            // Store incorrect answer
+            if (!gameState.teamAnswers[data.team]) {
+                gameState.teamAnswers[data.team] = [];
+            }
+            gameState.teamAnswers[data.team].push({
+                question: gameState.currentQuestion,
+                answer: data.submittedAnswer,
+                correct: false,
+                submittedBy: data.submittedBy
+            });
+
             showNotification(`${data.team} received a strike! (${data.strikes}/3)`, 'error');
         });
 
@@ -940,7 +1024,7 @@
             data.answers.forEach((answer, index) => {
                 const slot = document.getElementById(`answer${index}`);
                 slot.classList.add('revealed');
-                slot.querySelector('.answer-text').textContent = answer.text;
+                slot.querySelector('.answer-text').textContent = `${index + 1}. ${answer.text}`;
             });
         });
 
@@ -958,8 +1042,52 @@
             }
 
             document.getElementById('winnerText').textContent = winnerText;
+
+            // Display team answers
+            displayTeamAnswers();
+
             showScreen('gameOverScreen');
         });
+
+        function displayTeamAnswers() {
+            const teamAAnswers = document.getElementById('teamAAnswers');
+            const teamBAnswers = document.getElementById('teamBAnswers');
+
+            teamAAnswers.innerHTML = '';
+            teamBAnswers.innerHTML = '';
+
+            // Display Team A answers
+            if (gameState.teamAnswers['Team A'] && gameState.teamAnswers['Team A'].length > 0) {
+                gameState.teamAnswers['Team A'].forEach(answer => {
+                    const item = document.createElement('div');
+                    item.className = 'answer-item';
+                    item.innerHTML = `
+                        <strong>Q${answer.question}:</strong> ${answer.answer} 
+                        ${answer.correct ? `<span style="color: #4CAF50;">✓ +${answer.points}pts</span>` : '<span style="color: #F44336;">✗ Strike</span>'}
+                        <br><small>by ${answer.submittedBy}</small>
+                    `;
+                    teamAAnswers.appendChild(item);
+                });
+            } else {
+                teamAAnswers.innerHTML = '<div class="answer-item">No answers submitted</div>';
+            }
+
+            // Display Team B answers
+            if (gameState.teamAnswers['Team B'] && gameState.teamAnswers['Team B'].length > 0) {
+                gameState.teamAnswers['Team B'].forEach(answer => {
+                    const item = document.createElement('div');
+                    item.className = 'answer-item';
+                    item.innerHTML = `
+                        <strong>Q${answer.question}:</strong> ${answer.answer} 
+                        ${answer.correct ? `<span style="color: #4CAF50;">✓ +${answer.points}pts</span>` : '<span style="color: #F44336;">✗ Strike</span>'}
+                        <br><small>by ${answer.submittedBy}</small>
+                    `;
+                    teamBAnswers.appendChild(item);
+                });
+            } else {
+                teamBAnswers.innerHTML = '<div class="answer-item">No answers submitted</div>';
+            }
+        }
 
         socket.on('game-start-failed', (message) => {
             showNotification(message, 'error');

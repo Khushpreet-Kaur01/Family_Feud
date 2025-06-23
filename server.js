@@ -24,6 +24,7 @@ let gameState = {
         'Team A': [],
         'Team B': []
     },
+    teamAnswers: { 'Team A': [], 'Team B': [] }, // Store team answers for final display
     questions: [
         {
             question: "Complete the Sanskrit verse: 'सत्यं वद धर्मं चर स्वाध्यायान्मा प्रमदः |' What comes next?",
@@ -146,17 +147,12 @@ io.on('connection', (socket) => {
     // Start game
     socket.on('start-game', () => {
         if (socket.id === gameState.host) {
-            // Check minimum participants
-            if (gameState.participants['Team A'].length === 0 || gameState.participants['Team B'].length === 0) {
-                socket.emit('game-start-failed', 'Need at least one participant from each team');
-                return;
-            }
-
             gameState.isActive = true;
             gameState.currentQuestion = 0;
             gameState.scores = { 'Team A': 0, 'Team B': 0 };
             gameState.strikes = { 'Team A': 0, 'Team B': 0 };
             gameState.revealedAnswers = { 'Team A': [], 'Team B': [] };
+            gameState.teamAnswers = { 'Team A': [], 'Team B': [] };
 
             // Start countdown for participants
             io.to('Team A').to('Team B').emit('countdown-start');
@@ -205,6 +201,15 @@ io.on('connection', (socket) => {
             gameState.revealedAnswers[team].push(answerIndex);
             gameState.scores[team] += foundAnswer.points;
 
+            // Store the answer for final display
+            gameState.teamAnswers[team].push({
+                question: gameState.currentQuestion + 1,
+                answer: answer,
+                correct: true,
+                points: foundAnswer.points,
+                submittedBy: socket.participant.name
+            });
+
             // Send to team members only
             io.to(team).emit('answer-correct', {
                 answerIndex: answerIndex,
@@ -221,12 +226,21 @@ io.on('connection', (socket) => {
                 answer: foundAnswer,
                 points: foundAnswer.points,
                 scores: gameState.scores,
-                submittedBy: socket.participant.name
+                submittedBy: socket.participant.name,
+                submittedAnswer: answer
             });
 
         } else {
             // Incorrect answer
             gameState.strikes[team]++;
+
+            // Store the incorrect answer for final display
+            gameState.teamAnswers[team].push({
+                question: gameState.currentQuestion + 1,
+                answer: answer,
+                correct: false,
+                submittedBy: socket.participant.name
+            });
 
             // Send strike to team
             io.to(team).emit('answer-incorrect', {
@@ -237,7 +251,8 @@ io.on('connection', (socket) => {
             // Send to host
             io.to('host').emit('strike-updated', {
                 team: team,
-                strikes: gameState.strikes[team]
+                strikes: gameState.strikes[team],
+                submittedAnswer: answer
             });
 
             // Check if team reached 3 strikes
@@ -348,8 +363,8 @@ function startQuestion() {
     io.emit('question-started', {
         questionNumber: gameState.currentQuestion + 1,
         question: question.question,
-        answers: question.answers.map(a => ({ points: a.points })), // Don't send answer text
-        timer: gameState.timer
+        answers: question.answers.map(a => ({ points: a.points })), // Don't send answer text to participants
+        fullAnswers: question.answers // Send full answers to host
     });
 
     // Start timer
@@ -385,7 +400,8 @@ function endGame() {
 
     io.emit('game-ended', {
         winner: winner,
-        scores: gameState.scores
+        scores: gameState.scores,
+        teamAnswers: gameState.teamAnswers
     });
 
     console.log('Game ended. Winner:', winner);
@@ -407,7 +423,7 @@ function getLocalIP() {
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     const localIP = getLocalIP();
-    console.log(`🎮 Family Feud Server running on:`);
+    console.log(`🎮 शब्द संवाद Server running on:`);
     console.log(`   Local:    http://localhost:${PORT}`);
     console.log(`   Network:  http://${localIP}:${PORT}`);
     console.log(`\n📱 Team members can join using: http://${localIP}:${PORT}`);

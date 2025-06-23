@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Family Feud - Real-time Game</title>
+    <title>शब्द संवाद - Real-time Game</title>
     <style>
         * {
             margin: 0;
@@ -165,8 +165,8 @@
 <body>
     <div class="container">
         <div class="welcome-card">
-            <h1 class="title">Family Feud</h1>
-            <p class="subtitle">Real-time Multiplayer Sanskrit Game Show</p>
+            <h1 class="title">शब्द संवाद</h1>
+            <p class="subtitle">Sanskrit Game Show</p>
 
             <div class="login-options">
                 <a href="/host" class="login-btn host">🎮 Host Login</a>
@@ -176,27 +176,40 @@
             <div class="info-section">
                 <div class="info-title">🎯 How to Play</div>
                 <div class="info-text">
-                    <strong>For Host:</strong> Manage teams, control game flow, and reveal answers.<br>
-                    <strong>For Teams:</strong> Join Team A or Team B, answer Sanskrit questions, and compete for
-                    points!
+                    Two teams compete to answer Sanskrit questions.<br> Each team has 3 strikes and 40 seconds per
+                    question.<br>
+                    Answer correctly to earn points, but be careful - 3 wrong answers and your team is eliminated!<br>
+                    The team with the highest score after 3 questions wins.
                 </div>
 
                 <div class="credentials">
-                    <h4>🔐 Login Credentials:</h4>
-                    <div class="cred-item"><strong>Host:</strong> username: gamehost | password: host123</div>
-                    <div class="cred-item"><strong>Teams:</strong> password: team123</div>
-                </div>
-            </div>
-
-            <div class="info-section">
-                <div class="info-title">🌐 Network Setup</div>
-                <div class="info-text">
-                    Share your local network IP with team members so they can join from their devices.<br>
-                    <strong>Example:</strong> http://192.168.1.100:3000
+                    <h4>सर्वेभ्यः प्रतियोगिभ्यः तथा आमन्त्रकाय हार्दं स्वागतं।<br>
+                        आद्यतनक्रीडायां यूयं सर्वे सुस्वागतम्।</h4>
+                    <h4>A heartfelt welcome to all participants and the host. You all are warmly welcomed to today’s
+                        game</h4>
+                    <!-- <div class="cred-item"><strong>Host:</strong> username: gamehost | password: host123</div>
+                    <div class="cred-item"><strong>Teams:</strong> password: team123</div> -->
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Background Music -->
+    <audio id="backgroundMusic" loop>
+        <source src="https://www.soundjay.com/misc/sounds/game-show-theme.mp3" type="audio/mpeg">
+        <source
+            src="https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-one/zapsplat_multimedia_game_show_theme_music_upbeat_positive_001_24004.mp3"
+            type="audio/mpeg">
+    </audio>
+
+    <script>
+        // Start background music when user interacts with page
+        document.addEventListener('click', function () {
+            const music = document.getElementById('backgroundMusic');
+            music.volume = 0.3;
+            music.play().catch(e => console.log('Audio play failed:', e));
+        }, { once: true });
+    </script>
 </body>
 
 </html>

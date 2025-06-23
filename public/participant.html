@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Family Feud - Team Player</title>
+    <title>शब्द संवाद - Team Player</title>
     <style>
         * {
             margin: 0;
@@ -22,6 +22,7 @@
             min-height: 100vh;
             color: white;
             position: relative;
+            overflow-x: hidden;
         }
 
         body::before {
@@ -39,7 +40,8 @@
         .container {
             max-width: 1000px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 10px;
+            min-height: 100vh;
         }
 
         .screen {
@@ -89,6 +91,18 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .welcome-message {
+            background: rgba(255, 193, 7, 0.2);
+            border: 2px solid #FFC107;
+            color: #FFC107;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2em;
         }
 
         .form-group {
@@ -252,25 +266,36 @@
             }
         }
 
-        /* Game Screen */
+        /* Game Screen - Optimized for no scrolling */
+        .game-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+        }
+
         .game-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
+        }
+
+        .game-header .title {
+            font-size: 2em;
         }
 
         .score-board {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
         }
 
         .team-score {
             background: rgba(0, 20, 40, 0.9);
             backdrop-filter: blur(15px);
-            padding: 20px;
+            padding: 15px;
             border-radius: 15px;
             text-align: center;
-            min-width: 180px;
+            min-width: 160px;
             border: 2px solid rgba(0, 150, 255, 0.4);
             box-shadow: 0 0 20px rgba(0, 100, 255, 0.3);
         }
@@ -281,12 +306,12 @@
         }
 
         .score-team-name {
-            font-size: 1.2em;
-            margin-bottom: 10px;
+            font-size: 1.1em;
+            margin-bottom: 8px;
         }
 
         .score {
-            font-size: 2em;
+            font-size: 1.8em;
             font-weight: bold;
             color: #FFD700;
         }
@@ -295,15 +320,15 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             background: rgba(0, 20, 40, 0.9);
-            padding: 20px;
+            padding: 15px;
             border-radius: 15px;
             border: 2px solid rgba(0, 150, 255, 0.4);
         }
 
         .timer {
-            font-size: 2em;
+            font-size: 1.5em;
             font-weight: bold;
             color: #4CAF50;
         }
@@ -334,11 +359,14 @@
             background: rgba(0, 20, 40, 0.9);
             backdrop-filter: blur(15px);
             border-radius: 15px;
-            padding: 30px;
+            padding: 20px;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             border: 2px solid rgba(0, 150, 255, 0.4);
             box-shadow: 0 0 30px rgba(0, 100, 255, 0.3);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .question-number {
@@ -348,31 +376,32 @@
             border-radius: 20px;
             font-weight: bold;
             display: inline-block;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .question-text {
-            font-size: 1.5em;
-            margin-bottom: 20px;
+            font-size: 1.2em;
+            margin-bottom: 15px;
             line-height: 1.4;
         }
 
         .answers-board {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 10px;
-            margin: 20px 0;
+            gap: 8px;
+            margin: 15px 0;
+            flex-grow: 1;
         }
 
         .answer-slot {
             background: rgba(0, 20, 60, 0.8);
             border: 3px solid #00BFFF;
             border-radius: 10px;
-            padding: 15px;
+            padding: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            min-height: 60px;
+            min-height: 50px;
             transition: all 0.3s ease;
             box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);
             backdrop-filter: blur(10px);
@@ -408,14 +437,14 @@
         }
 
         .answer-text {
-            font-size: 1.1em;
+            font-size: 1em;
             font-weight: bold;
         }
 
         .answer-points {
             background: #FFD700;
             color: #333;
-            padding: 5px 15px;
+            padding: 5px 12px;
             border-radius: 15px;
             font-weight: bold;
         }
@@ -424,8 +453,7 @@
             background: rgba(0, 20, 40, 0.9);
             backdrop-filter: blur(15px);
             border-radius: 15px;
-            padding: 25px;
-            margin-top: 20px;
+            padding: 20px;
             border: 2px solid rgba(0, 150, 255, 0.4);
         }
 
@@ -434,7 +462,7 @@
             gap: 15px;
             justify-content: center;
             align-items: center;
-            margin: 20px 0;
+            margin: 15px 0;
         }
 
         .input-field {
@@ -444,7 +472,7 @@
             background: rgba(0, 50, 100, 0.6);
             color: white;
             font-size: 1em;
-            width: 350px;
+            width: 300px;
             border: 2px solid rgba(0, 150, 255, 0.4);
         }
 
@@ -479,8 +507,8 @@
         }
 
         .feedback {
-            margin: 20px 0;
-            padding: 15px;
+            margin: 15px 0;
+            padding: 12px;
             border-radius: 10px;
             text-align: center;
             font-weight: bold;
@@ -536,11 +564,15 @@
         /* Game Over */
         .game-over {
             text-align: center;
-            padding: 50px;
+            padding: 30px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .winner-announcement {
-            font-size: 3em;
+            font-size: 2.5em;
             color: #FFD700;
             margin-bottom: 20px;
             animation: bounce 2s infinite;
@@ -568,14 +600,14 @@
         .final-scores {
             display: flex;
             justify-content: center;
-            gap: 80px;
-            margin: 40px 0;
+            gap: 60px;
+            margin: 30px 0;
         }
 
         @media (max-width: 768px) {
             .score-board {
                 flex-direction: column;
-                gap: 20px;
+                gap: 15px;
             }
 
             .input-controls {
@@ -600,7 +632,10 @@
         <div id="loginScreen" class="screen active">
             <div class="login-container">
                 <div class="login-card">
-                    <h2 class="title">Join Team</h2>
+                    <h2 class="title">शब्द संवाद</h2>
+                    <div class="welcome-message">
+                        सुस्वागतम्
+                    </div>
                     <div class="form-group">
                         <label>Select Team:</label>
                         <select id="teamSelect">
@@ -656,48 +691,50 @@
 
         <!-- Game Screen -->
         <div id="gameScreen" class="screen">
-            <div class="game-header">
-                <h1 class="title">Family Feud</h1>
-            </div>
-
-            <div class="score-board">
-                <div class="team-score" id="teamAScore">
-                    <div class="score-team-name">🔵 Team A</div>
-                    <div class="score" id="scoreA">0</div>
-                </div>
-                <div class="team-score" id="teamBScore">
-                    <div class="score-team-name">🔴 Team B</div>
-                    <div class="score" id="scoreB">0</div>
-                </div>
-            </div>
-
-            <div class="game-info">
-                <div class="timer" id="timerContainer">
-                    ⏱️ Timer: <span id="timerDisplay">40</span>s
-                </div>
-                <div>
-                    <strong>Question <span id="questionNumber">1</span> of 3</strong>
-                </div>
-            </div>
-
-            <div class="question-area">
-                <div class="question-text" id="questionText">
-                    Loading question...
+            <div class="game-container">
+                <div class="game-header">
+                    <h1 class="title">शब्द संवाद</h1>
                 </div>
 
-                <div class="answers-board" id="answersBoard">
-                    <!-- Answers will be populated here -->
+                <div class="score-board">
+                    <div class="team-score" id="teamAScore">
+                        <div class="score-team-name">🔵 Team A</div>
+                        <div class="score" id="scoreA">0</div>
+                    </div>
+                    <div class="team-score" id="teamBScore">
+                        <div class="score-team-name">🔴 Team B</div>
+                        <div class="score" id="scoreB">0</div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="input-area">
-                <h3 style="text-align: center; margin-bottom: 20px;">🎯 Submit Your Answer</h3>
-                <div class="input-controls">
-                    <input type="text" class="input-field" id="answerInput"
-                        placeholder="Enter your answer in Sanskrit or English...">
-                    <button class="submit-btn" id="submitBtn" onclick="submitAnswer()">Submit Answer</button>
+                <div class="game-info">
+                    <div class="timer" id="timerContainer">
+                        ⏱️ Timer: <span id="timerDisplay">40</span>s
+                    </div>
+                    <div>
+                        <strong>Question <span id="questionNumber">1</span> of 3</strong>
+                    </div>
                 </div>
-                <div class="feedback" id="feedback"></div>
+
+                <div class="question-area">
+                    <div class="question-text" id="questionText">
+                        Loading question...
+                    </div>
+
+                    <div class="answers-board" id="answersBoard">
+                        <!-- Answers will be populated here -->
+                    </div>
+                </div>
+
+                <div class="input-area">
+                    <h3 style="text-align: center; margin-bottom: 15px;">🎯 Submit Your Answer</h3>
+                    <div class="input-controls">
+                        <input type="text" class="input-field" id="answerInput"
+                            placeholder="Enter your answer in Sanskrit or English...">
+                        <button class="submit-btn" id="submitBtn" onclick="submitAnswer()">Submit Answer</button>
+                    </div>
+                    <div class="feedback" id="feedback"></div>
+                </div>
             </div>
         </div>
 
@@ -720,6 +757,11 @@
         </div>
     </div>
 
+    <!-- Background Music -->
+    <audio id="backgroundMusic" loop>
+        <source src="https://www.soundjay.com/misc/sounds/game-show-theme.mp3" type="audio/mpeg">
+    </audio>
+
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
@@ -729,6 +771,13 @@
             scores: { 'Team A': 0, 'Team B': 0 },
             currentQuestion: 0
         };
+
+        // Start background music
+        document.addEventListener('click', function () {
+            const music = document.getElementById('backgroundMusic');
+            music.volume = 0.2;
+            music.play().catch(e => console.log('Audio play failed:', e));
+        }, { once: true });
 
         // Screen management
         function hideAllScreens() {
@@ -846,7 +895,7 @@
                 slot.className = 'answer-slot';
                 slot.id = `answer${index}`;
                 slot.innerHTML = `
-                    <span class="answer-text">_ _ _ _ _ _ _ _ _ _</span>
+                    <span class="answer-text">${index + 1}. _ _ _ _ _ _ _ _ _ _</span>
                     <span class="answer-points">${answer.points}</span>
                 `;
                 answersBoard.appendChild(slot);
@@ -930,7 +979,7 @@
             // This is sent only to the team that got the answer correct
             const slot = document.getElementById(`answer${data.answerIndex}`);
             slot.classList.add('revealed', 'my-reveal');
-            slot.querySelector('.answer-text').textContent = data.answer.text;
+            slot.querySelector('.answer-text').textContent = `${data.answerIndex + 1}. ${data.answer.text}`;
 
             gameState.scores[gameState.participant.team] = data.teamScore;
             updateScoreboard();
@@ -956,14 +1005,14 @@
             // Manual reveal by host - visible to all participants
             const slot = document.getElementById(`answer${data.answerIndex}`);
             slot.classList.add('revealed');
-            slot.querySelector('.answer-text').textContent = data.answer.text;
+            slot.querySelector('.answer-text').textContent = `${data.answerIndex + 1}. ${data.answer.text}`;
         });
 
         socket.on('all-answers-revealed', (data) => {
             data.answers.forEach((answer, index) => {
                 const slot = document.getElementById(`answer${index}`);
                 slot.classList.add('revealed');
-                slot.querySelector('.answer-text').textContent = answer.text;
+                slot.querySelector('.answer-text').textContent = `${index + 1}. ${answer.text}`;
             });
 
             showNotification('All answers revealed by host!');
