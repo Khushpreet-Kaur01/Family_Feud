@@ -27,13 +27,13 @@ let gameState = {
     teamAnswers: { 'Team A': [], 'Team B': [] }, // Store team answers for final display
     questions: [
         {
-            question: "Complete the Sanskrit verse: 'सत्यं वद धर्मं चर स्वाध्यायान्मा प्रमदः |' What comes next?",
+            question: "Name a Sanskrit term for natural element( earth, fire, water etc)?",
             answers: [
-                { text: "आचार्याय प्रियं धनमाहृत्य", points: 25 },
-                { text: "मातृदेवो भव", points: 20 },
-                { text: "पितृदेवो भव", points: 15 },
-                { text: "अतिथिदेवो भव", points: 10 },
-                { text: "गुरुदेवो भव", points: 5 }
+                { text: "Agni", points: 25 },
+                { text: "Prithvi", points: 20 },
+                { text: "Bhumi", points: 15 },
+                { text: "Jal", points: 10 },
+                { text: "Vayu", points: 5 }
             ]
         },
         {
