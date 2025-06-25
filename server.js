@@ -25,6 +25,7 @@ let gameState = {
         'Team B': []
     },
     teamAnswers: { 'Team A': [], 'Team B': [] }, // Store team answers for final display
+    teamChats: { 'Team A': [], 'Team B': [] }, // Store chat messages
     questions: [
         {
             question: "Name a Sanskrit term for natural element( earth, fire, water etc)?",
@@ -153,6 +154,7 @@ io.on('connection', (socket) => {
             gameState.strikes = { 'Team A': 0, 'Team B': 0 };
             gameState.revealedAnswers = { 'Team A': [], 'Team B': [] };
             gameState.teamAnswers = { 'Team A': [], 'Team B': [] };
+            gameState.teamChats = { 'Team A': [], 'Team B': [] };
 
             // Start countdown for participants
             io.to('Team A').to('Team B').emit('countdown-start');
@@ -163,6 +165,56 @@ io.on('connection', (socket) => {
 
             console.log('Game started');
         }
+    });
+
+    // Send chat message
+    socket.on('send-chat', (data) => {
+        console.log('Received send-chat event from:', socket.id, 'Data:', data);
+
+        if (!socket.participant) {
+            console.log('Chat rejected - no participant data for socket:', socket.id);
+            return;
+        }
+
+        // Allow chat in both waiting room and during game
+        // Remove the gameState.isActive check to allow chat anytime
+
+        const { message } = data;
+        const team = socket.participant.team;
+        const sender = socket.participant.name;
+
+        console.log(`Processing chat from ${sender} (${team}): ${message}`);
+
+        // Add message to team chat
+        const chatMessage = {
+            sender: sender,
+            message: message,
+            timestamp: new Date().toISOString()
+        };
+
+        if (!gameState.teamChats[team]) {
+            gameState.teamChats[team] = [];
+        }
+
+        gameState.teamChats[team].push(chatMessage);
+
+        console.log(`Team ${team} chat now has ${gameState.teamChats[team].length} messages`);
+
+        // Send to team members
+        console.log(`Sending chat to team ${team}`);
+        io.to(team).emit('chat-message', {
+            team: team,
+            messages: gameState.teamChats[team]
+        });
+
+        // Send to host (both team chats)
+        console.log(`Sending chat to host`);
+        io.to('host').emit('chat-message', {
+            team: team,
+            messages: gameState.teamChats[team]
+        });
+
+        console.log(`Chat message sent successfully`);
     });
 
     // Submit answer
@@ -216,7 +268,17 @@ io.on('connection', (socket) => {
                 answer: foundAnswer,
                 points: foundAnswer.points,
                 teamScore: gameState.scores[team],
+                allScores: gameState.scores, // Send all scores for real-time updates
                 submittedBy: socket.participant.name
+            });
+
+            // Send to all participants to show the revealed answer
+            io.to('Team A').to('Team B').emit('answer-revealed-all', {
+                answerIndex: answerIndex,
+                answer: foundAnswer,
+                team: team,
+                submittedBy: socket.participant.name,
+                allScores: gameState.scores
             });
 
             // Send to host with team info
@@ -252,7 +314,8 @@ io.on('connection', (socket) => {
             io.to('host').emit('strike-updated', {
                 team: team,
                 strikes: gameState.strikes[team],
-                submittedAnswer: answer
+                submittedAnswer: answer,
+                submittedBy: socket.participant.name
             });
 
             // Check if team reached 3 strikes
@@ -270,10 +333,20 @@ io.on('connection', (socket) => {
             const question = gameState.questions[gameState.currentQuestion];
             const answer = question.answers[answerIndex];
 
+            console.log(`Host manually revealing answer ${answerIndex}: ${answer.text}`);
+
             // Reveal to all participants
             io.to('Team A').to('Team B').emit('answer-revealed-all', {
                 answerIndex: answerIndex,
-                answer: answer
+                answer: answer,
+                allScores: gameState.scores
+            });
+
+            // Reveal to host as well - use the same event as participants
+            io.to('host').emit('answer-revealed-all', {
+                answerIndex: answerIndex,
+                answer: answer,
+                allScores: gameState.scores
             });
 
             // Update revealed answers for both teams
