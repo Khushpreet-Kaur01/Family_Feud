@@ -38,7 +38,7 @@
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 10px;
             min-height: 100vh;
@@ -266,21 +266,170 @@
             }
         }
 
-        /* Game Screen - Optimized for no scrolling */
+        /* Game Screen - with chat */
         .game-container {
             height: 100vh;
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-areas:
+                "header header header"
+                "chat-left game-center chat-right"
+                "chat-left input-area chat-right";
+            grid-template-columns: 250px 1fr 250px;
+            grid-template-rows: auto 1fr auto;
+            gap: 15px;
             padding: 10px;
         }
 
+        .game-container.team-a {
+            grid-template-areas:
+                "header header header"
+                "team-chat game-center ."
+                "team-chat input-area .";
+        }
+
+        .game-container.team-b {
+            grid-template-areas:
+                "header header header"
+                ". game-center team-chat"
+                ". input-area team-chat";
+        }
+
         .game-header {
+            grid-area: header;
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 5px;
         }
 
         .game-header .title {
             font-size: 2em;
+        }
+
+        .current-team-display {
+            background: rgba(255, 215, 0, 0.2);
+            border: 2px solid #FFD700;
+            color: #FFD700;
+            padding: 10px;
+            border-radius: 10px;
+            margin: 10px 0;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        /* Chat container for participant's team */
+        .team-chat-container {
+            grid-area: team-chat;
+            background: rgba(0, 20, 40, 0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            border: 2px solid rgba(0, 150, 255, 0.4);
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+        }
+
+        .team-chat-container.team-a {
+            border-color: rgba(76, 175, 80, 0.4);
+        }
+
+        .team-chat-container.team-b {
+            border-color: rgba(244, 67, 54, 0.4);
+        }
+
+        .chat-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+            border-bottom: 1px solid rgba(0, 150, 255, 0.3);
+            padding-bottom: 10px;
+            color: #4ECDC4;
+        }
+
+        .team-chat-container.team-a .chat-header {
+            color: #4CAF50;
+            border-bottom-color: rgba(76, 175, 80, 0.3);
+        }
+
+        .team-chat-container.team-b .chat-header {
+            color: #F44336;
+            border-bottom-color: rgba(244, 67, 54, 0.3);
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            max-height: 200px;
+            padding: 10px 0;
+        }
+
+        .chat-message {
+            background: rgba(0, 50, 100, 0.4);
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            border-left: 3px solid #4ECDC4;
+            font-size: 0.9em;
+        }
+
+        .team-chat-container.team-a .chat-message {
+            border-left-color: #4CAF50;
+        }
+
+        .team-chat-container.team-b .chat-message {
+            border-left-color: #F44336;
+        }
+
+        .chat-sender {
+            font-weight: bold;
+            color: #FFD700;
+            margin-bottom: 3px;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .chat-input {
+            flex-grow: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 15px;
+            background: rgba(0, 50, 100, 0.6);
+            color: white;
+            font-size: 0.9em;
+            border: 1px solid rgba(0, 150, 255, 0.4);
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .chat-send-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            background: linear-gradient(45deg, #4ECDC4, #44A08D);
+            color: white;
+            font-weight: bold;
+        }
+
+        .chat-send-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Game center area */
+        .game-center {
+            grid-area: game-center;
+            display: flex;
+            flex-direction: column;
         }
 
         .score-board {
@@ -439,6 +588,8 @@
         .answer-text {
             font-size: 1em;
             font-weight: bold;
+            text-align: left;
+            flex-grow: 1;
         }
 
         .answer-points {
@@ -449,7 +600,9 @@
             font-weight: bold;
         }
 
+        /* Input area */
         .input-area {
+            grid-area: input-area;
             background: rgba(0, 20, 40, 0.9);
             backdrop-filter: blur(15px);
             border-radius: 15px;
@@ -604,6 +757,12 @@
             margin: 30px 0;
         }
 
+        @media (max-width: 1000px) {
+            .game-container {
+                grid-template-columns: 200px 1fr 200px;
+            }
+        }
+
         @media (max-width: 768px) {
             .score-board {
                 flex-direction: column;
@@ -621,6 +780,29 @@
             .final-scores {
                 flex-direction: column;
                 gap: 30px;
+            }
+
+            .game-container {
+                grid-template-areas:
+                    "header"
+                    "game-center"
+                    "team-chat"
+                    "input-area";
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr auto auto;
+            }
+
+            .game-container.team-a,
+            .game-container.team-b {
+                grid-template-areas:
+                    "header"
+                    "game-center"
+                    "team-chat"
+                    "input-area";
+            }
+
+            .team-chat-container {
+                max-height: 200px;
             }
         }
     </style>
@@ -676,6 +858,21 @@
                     </div>
                 </div>
 
+                <!-- Simple chat for testing -->
+                <div style="background: rgba(0, 50, 100, 0.4); border-radius: 10px; padding: 20px; margin: 20px 0;">
+                    <h3 style="color: #FFD700; margin-bottom: 15px;">💬 Team Chat (Test)</h3>
+                    <div id="waitingChatMessages"
+                        style="background: rgba(0, 0, 0, 0.3); border-radius: 8px; padding: 15px; height: 150px; overflow-y: auto; margin-bottom: 10px;">
+                        <div style="text-align: center; color: #ccc;">Team chat will appear here...</div>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="waitingChatInput" placeholder="Type a message..."
+                            style="flex-grow: 1; padding: 10px; border: none; border-radius: 5px; background: rgba(0, 50, 100, 0.6); color: white;">
+                        <button onclick="testChatMessage()"
+                            style="padding: 10px 20px; border: none; border-radius: 5px; background: linear-gradient(45deg, #4ECDC4, #44A08D); color: white; cursor: pointer;">Send</button>
+                    </div>
+                </div>
+
                 <div style="text-align: center; margin-top: 30px;">
                     <a href="/" class="back-btn">Leave Team</a>
                 </div>
@@ -691,41 +888,62 @@
 
         <!-- Game Screen -->
         <div id="gameScreen" class="screen">
-            <div class="game-container">
+            <div class="game-container" id="gameContainer">
                 <div class="game-header">
                     <h1 class="title">शब्द संवाद</h1>
-                </div>
-
-                <div class="score-board">
-                    <div class="team-score" id="teamAScore">
-                        <div class="score-team-name">🔵 Team A</div>
-                        <div class="score" id="scoreA">0</div>
-                    </div>
-                    <div class="team-score" id="teamBScore">
-                        <div class="score-team-name">🔴 Team B</div>
-                        <div class="score" id="scoreB">0</div>
+                    <div class="current-team-display" id="currentTeamDisplay">
+                        Team A
                     </div>
                 </div>
 
-                <div class="game-info">
-                    <div class="timer" id="timerContainer">
-                        ⏱️ Timer: <span id="timerDisplay">40</span>s
+                <!-- Team Chat (positioned based on team) -->
+                <div class="team-chat-container" id="teamChatContainer">
+                    <div class="chat-header" id="chatHeader">🔵 Team Chat</div>
+                    <div class="chat-messages" id="chatMessages">
+                        <div style="text-align: center; color: #ccc; margin-top: 50px; font-size: 0.9em;">
+                            Team chat will appear here...
+                        </div>
                     </div>
-                    <div>
-                        <strong>Question <span id="questionNumber">1</span> of 3</strong>
-                    </div>
-                </div>
-
-                <div class="question-area">
-                    <div class="question-text" id="questionText">
-                        Loading question...
-                    </div>
-
-                    <div class="answers-board" id="answersBoard">
-                        <!-- Answers will be populated here -->
+                    <div class="chat-input-area">
+                        <input type="text" class="chat-input" id="chatInput" placeholder="Type your message...">
+                        <button class="chat-send-btn" onclick="sendChatMessage()">Send</button>
                     </div>
                 </div>
 
+                <!-- Game Center Area -->
+                <div class="game-center">
+                    <div class="score-board">
+                        <div class="team-score" id="teamAScore">
+                            <div class="score-team-name">🔵 Team A</div>
+                            <div class="score" id="scoreA">0</div>
+                        </div>
+                        <div class="team-score" id="teamBScore">
+                            <div class="score-team-name">🔴 Team B</div>
+                            <div class="score" id="scoreB">0</div>
+                        </div>
+                    </div>
+
+                    <div class="game-info">
+                        <div class="timer" id="timerContainer">
+                            ⏱️ Timer: <span id="timerDisplay">40</span>s
+                        </div>
+                        <div>
+                            <strong>Question <span id="questionNumber">1</span> of 3</strong>
+                        </div>
+                    </div>
+
+                    <div class="question-area">
+                        <div class="question-text" id="questionText">
+                            Loading question...
+                        </div>
+
+                        <div class="answers-board" id="answersBoard">
+                            <!-- Answers will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
                 <div class="input-area">
                     <h3 style="text-align: center; margin-bottom: 15px;">🎯 Submit Your Answer</h3>
                     <div class="input-controls">
@@ -839,6 +1057,92 @@
             document.getElementById('answerInput').value = '';
         }
 
+        // Send chat message
+        function sendChatMessage() {
+            const chatInput = document.getElementById('chatInput');
+            const message = chatInput.value.trim();
+
+            if (!message) {
+                showNotification('Please enter a message', 'error');
+                return;
+            }
+
+            if (message.length > 200) {
+                showNotification('Message too long (max 200 characters)', 'error');
+                return;
+            }
+
+            console.log('Sending chat message:', message);
+            socket.emit('send-chat', { message });
+            chatInput.value = '';
+        }
+
+        // Test chat message function for waiting room
+        function testChatMessage() {
+            const chatInput = document.getElementById('waitingChatInput');
+            const message = chatInput.value.trim();
+
+            if (!message) {
+                showNotification('Please enter a message', 'error');
+                return;
+            }
+
+            console.log('Sending test chat message:', message);
+            console.log('Current participant:', gameState.participant);
+
+            socket.emit('send-chat', { message });
+            chatInput.value = '';
+        }
+
+        // Update waiting room chat messages
+        function updateWaitingChatMessages(messages) {
+            const chatContainer = document.getElementById('waitingChatMessages');
+
+            if (!chatContainer) return;
+
+            chatContainer.innerHTML = '';
+
+            if (messages.length === 0) {
+                chatContainer.innerHTML = '<div style="text-align: center; color: #ccc;">Team chat will appear here...</div>';
+            } else {
+                messages.forEach(msg => {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.style.cssText = 'background: rgba(0, 50, 100, 0.4); padding: 8px 12px; margin-bottom: 8px; border-radius: 8px; border-left: 3px solid #4ECDC4; font-size: 0.9em;';
+                    messageDiv.innerHTML = `
+                        <div style="font-weight: bold; color: #FFD700; margin-bottom: 3px;">${msg.sender}</div>
+                        <div>${msg.message}</div>
+                    `;
+                    chatContainer.appendChild(messageDiv);
+                });
+
+                // Scroll to bottom
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+        }
+
+        // Setup team-specific layout
+        function setupTeamLayout(team) {
+            const gameContainer = document.getElementById('gameContainer');
+            const teamChatContainer = document.getElementById('teamChatContainer');
+            const chatHeader = document.getElementById('chatHeader');
+            const currentTeamDisplay = document.getElementById('currentTeamDisplay');
+
+            // Set team display
+            currentTeamDisplay.textContent = team;
+
+            if (team === 'Team A') {
+                gameContainer.classList.add('team-a');
+                teamChatContainer.classList.add('team-a');
+                chatHeader.textContent = '🔵 Team A Chat';
+                chatHeader.style.color = '#4CAF50';
+            } else if (team === 'Team B') {
+                gameContainer.classList.add('team-b');
+                teamChatContainer.classList.add('team-b');
+                chatHeader.textContent = '🔴 Team B Chat';
+                chatHeader.style.color = '#F44336';
+            }
+        }
+
         // Update team members list
         function updateTeamMembers() {
             const teamList = document.getElementById('teamMembersList');
@@ -907,6 +1211,30 @@
             feedback.className = 'feedback';
         }
 
+        // Update chat messages
+        function updateChatMessages(messages) {
+            const chatMessages = document.getElementById('chatMessages');
+
+            chatMessages.innerHTML = '';
+
+            if (messages.length === 0) {
+                chatMessages.innerHTML = '<div style="text-align: center; color: #ccc; margin-top: 50px; font-size: 0.9em;">Team chat will appear here...</div>';
+            } else {
+                messages.forEach(msg => {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'chat-message';
+                    messageDiv.innerHTML = `
+                        <div class="chat-sender">${msg.sender}</div>
+                        <div>${msg.message}</div>
+                    `;
+                    chatMessages.appendChild(messageDiv);
+                });
+
+                // Scroll to bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }
+
         // Show countdown
         function showCountdown() {
             showScreen('countdownScreen');
@@ -946,13 +1274,25 @@
                 gameState.teamMembers = data.teamMembers;
 
                 document.getElementById('currentTeamName').textContent = data.participant.team;
+                setupTeamLayout(data.participant.team);
                 updateTeamMembers();
 
                 showNotification(`Welcome to ${data.participant.team}, ${data.participant.name}!`);
                 showScreen('teamDashboardScreen');
+
+                console.log('Participant authenticated:', gameState.participant);
             } else {
                 showNotification(data.message || 'Login failed', 'error');
             }
+        });
+
+        socket.on('connect', () => {
+            console.log('Socket connected to server');
+        });
+
+        socket.on('disconnect', () => {
+            console.log('Socket disconnected from server');
+            showNotification('Connection lost. Please refresh the page.', 'error');
         });
 
         socket.on('team-updated', (teamMembers) => {
@@ -973,6 +1313,8 @@
             // Enable input
             document.getElementById('answerInput').disabled = false;
             document.getElementById('submitBtn').disabled = false;
+
+            console.log('Question started, chat should now be available');
         });
 
         socket.on('answer-correct', (data) => {
@@ -981,7 +1323,9 @@
             slot.classList.add('revealed', 'my-reveal');
             slot.querySelector('.answer-text').textContent = `${data.answerIndex + 1}. ${data.answer.text}`;
 
-            gameState.scores[gameState.participant.team] = data.teamScore;
+            // Update both team scores
+            gameState.scores['Team A'] = data.allScores['Team A'];
+            gameState.scores['Team B'] = data.allScores['Team B'];
             updateScoreboard();
 
             const feedback = document.getElementById('feedback');
@@ -1002,10 +1346,16 @@
         });
 
         socket.on('answer-revealed-all', (data) => {
-            // Manual reveal by host - visible to all participants
+            // Manual reveal by host or answer from other team - visible to all participants
             const slot = document.getElementById(`answer${data.answerIndex}`);
             slot.classList.add('revealed');
             slot.querySelector('.answer-text').textContent = `${data.answerIndex + 1}. ${data.answer.text}`;
+
+            // Update scores for both teams
+            if (data.allScores) {
+                gameState.scores = data.allScores;
+                updateScoreboard();
+            }
         });
 
         socket.on('all-answers-revealed', (data) => {
@@ -1050,6 +1400,15 @@
             document.getElementById('submitBtn').disabled = true;
         });
 
+        socket.on('chat-message', (data) => {
+            console.log('Received chat message:', data);
+            // Only update if it's our team's chat
+            if (data.team === gameState.participant?.team) {
+                updateChatMessages(data.messages);
+                updateWaitingChatMessages(data.messages); // Also update waiting room chat
+            }
+        });
+
         socket.on('game-ended', (data) => {
             gameState.scores = data.scores;
 
@@ -1090,13 +1449,31 @@
             showNotification('Connection lost. Please refresh the page.', 'error');
         });
 
-        // Handle Enter key for answer submission
+        // Handle Enter key for answer submission and chat
         document.addEventListener('DOMContentLoaded', function () {
             const answerInput = document.getElementById('answerInput');
             if (answerInput) {
                 answerInput.addEventListener('keypress', function (e) {
                     if (e.key === 'Enter' && !document.getElementById('submitBtn').disabled) {
                         submitAnswer();
+                    }
+                });
+            }
+
+            const chatInput = document.getElementById('chatInput');
+            if (chatInput) {
+                chatInput.addEventListener('keypress', function (e) {
+                    if (e.key === 'Enter') {
+                        sendChatMessage();
+                    }
+                });
+            }
+
+            const waitingChatInput = document.getElementById('waitingChatInput');
+            if (waitingChatInput) {
+                waitingChatInput.addEventListener('keypress', function (e) {
+                    if (e.key === 'Enter') {
+                        testChatMessage();
                     }
                 });
             }
