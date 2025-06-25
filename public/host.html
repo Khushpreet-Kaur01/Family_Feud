@@ -227,12 +227,81 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         }
 
-        /* Game Screen - Optimized for no scrolling */
+        /* Game Screen - with chat boxes */
         .game-container {
             height: 100vh;
+            display: grid;
+            grid-template-columns: 250px 1fr 250px;
+            gap: 15px;
+            padding: 10px;
+        }
+
+        /* Left chat - Team A */
+        .chat-container-left {
+            background: rgba(0, 20, 40, 0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            border: 2px solid rgba(76, 175, 80, 0.4);
             display: flex;
             flex-direction: column;
-            padding: 10px;
+            padding: 15px;
+        }
+
+        .chat-header {
+            color: #4CAF50;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+            border-bottom: 1px solid rgba(76, 175, 80, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            max-height: 300px;
+            padding: 10px 0;
+        }
+
+        .chat-message {
+            background: rgba(0, 50, 100, 0.4);
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            border-left: 3px solid #4CAF50;
+            font-size: 0.9em;
+        }
+
+        .chat-sender {
+            font-weight: bold;
+            color: #FFD700;
+            margin-bottom: 3px;
+        }
+
+        /* Right chat - Team B */
+        .chat-container-right {
+            background: rgba(0, 20, 40, 0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            border: 2px solid rgba(244, 67, 54, 0.4);
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+        }
+
+        .chat-container-right .chat-header {
+            color: #F44336;
+            border-bottom: 1px solid rgba(244, 67, 54, 0.3);
+        }
+
+        .chat-container-right .chat-message {
+            border-left: 3px solid #F44336;
+        }
+
+        /* Center game area */
+        .game-center {
+            display: flex;
+            flex-direction: column;
         }
 
         .game-header {
@@ -397,6 +466,7 @@
             font-size: 1em;
             font-weight: bold;
             flex-grow: 1;
+            text-align: left;
         }
 
         .answer-points {
@@ -584,6 +654,12 @@
             }
         }
 
+        @media (max-width: 1200px) {
+            .game-container {
+                grid-template-columns: 200px 1fr 200px;
+            }
+        }
+
         @media (max-width: 768px) {
             .teams-container {
                 grid-template-columns: 1fr;
@@ -602,6 +678,16 @@
             .final-scores {
                 flex-direction: column;
                 gap: 30px;
+            }
+
+            .game-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr auto;
+            }
+
+            .chat-container-left,
+            .chat-container-right {
+                max-height: 200px;
             }
         }
     </style>
@@ -669,51 +755,75 @@
         <!-- Game Screen -->
         <div id="gameScreen" class="screen">
             <div class="game-container">
-                <div class="game-header">
-                    <h1 class="title">🎮 शब्द संवाद - Host Control</h1>
-                </div>
-
-                <div class="score-board">
-                    <div class="team-score">
-                        <div class="team-name">🔵 Team A</div>
-                        <div class="score" id="scoreA">0</div>
-                        <div class="strikes" id="strikesA">❌ Strikes: 0/3</div>
-                    </div>
-                    <div class="team-score">
-                        <div class="team-name">🔴 Team B</div>
-                        <div class="score" id="scoreB">0</div>
-                        <div class="strikes" id="strikesB">❌ Strikes: 0/3</div>
+                <!-- Left Chat - Team A -->
+                <div class="chat-container-left">
+                    <div class="chat-header">🔵 Team A Chat</div>
+                    <div class="chat-messages" id="chatMessagesA">
+                        <div style="text-align: center; color: #ccc; margin-top: 50px; font-size: 0.9em;">
+                            Team chat will appear here...
+                        </div>
                     </div>
                 </div>
 
-                <div class="game-info">
-                    <div class="timer" id="timerContainer">
-                        ⏱️ Timer: <span id="timerDisplay">40</span>s
+                <!-- Center Game Area -->
+                <div class="game-center">
+                    <div class="game-header">
+                        <h1 class="title">🎮 शब्द संवाद - Host Control</h1>
                     </div>
-                    <div>
-                        <strong>Question <span id="questionNumber">1</span> of 3</strong>
+
+                    <div class="score-board">
+                        <div class="team-score">
+                            <div class="team-name">🔵 Team A</div>
+                            <div class="score" id="scoreA">0</div>
+                            <div class="strikes" id="strikesA">❌ Strikes: 0/3</div>
+                        </div>
+                        <div class="team-score">
+                            <div class="team-name">🔴 Team B</div>
+                            <div class="score" id="scoreB">0</div>
+                            <div class="strikes" id="strikesB">❌ Strikes: 0/3</div>
+                        </div>
+                    </div>
+
+                    <div class="game-info">
+                        <div class="timer" id="timerContainer">
+                            ⏱️ Timer: <span id="timerDisplay">40</span>s
+                        </div>
+                        <div>
+                            <strong>Question <span id="questionNumber">1</span> of 3</strong>
+                        </div>
+                    </div>
+
+                    <div class="question-area">
+                        <div class="question-text" id="questionText">
+                            Loading question...
+                        </div>
+
+                        <div class="answers-board" id="answersBoard">
+                            <!-- Answers will be populated here -->
+                        </div>
+                    </div>
+
+                    <div class="host-controls">
+                        <h3 style="text-align: center; margin-bottom: 15px;">🎮 Host Controls</h3>
+                        <div class="control-buttons" id="revealButtons">
+                            <!-- Reveal buttons will be populated here -->
+                        </div>
+                        <div style="text-align: center;">
+                            <button class="reveal-btn" onclick="revealAllAnswers()">🔍 Reveal All</button>
+                            <button class="next-btn" id="nextQuestionBtn" onclick="nextQuestion()">⏭️ Next
+                                Question</button>
+                            <button class="end-btn" onclick="endGame()">🏁 End Game</button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="question-area">
-                    <div class="question-text" id="questionText">
-                        Loading question...
-                    </div>
-
-                    <div class="answers-board" id="answersBoard">
-                        <!-- Answers will be populated here -->
-                    </div>
-                </div>
-
-                <div class="host-controls">
-                    <h3 style="text-align: center; margin-bottom: 15px;">🎮 Host Controls</h3>
-                    <div class="control-buttons" id="revealButtons">
-                        <!-- Reveal buttons will be populated here -->
-                    </div>
-                    <div style="text-align: center;">
-                        <button class="reveal-btn" onclick="revealAllAnswers()">🔍 Reveal All</button>
-                        <button class="next-btn" onclick="nextQuestion()">⏭️ Next Question</button>
-                        <button class="end-btn" onclick="endGame()">🏁 End Game</button>
+                <!-- Right Chat - Team B -->
+                <div class="chat-container-right">
+                    <div class="chat-header">🔴 Team B Chat</div>
+                    <div class="chat-messages" id="chatMessagesB">
+                        <div style="text-align: center; color: #ccc; margin-top: 50px; font-size: 0.9em;">
+                            Team chat will appear here...
+                        </div>
                     </div>
                 </div>
             </div>
@@ -885,6 +995,14 @@
             document.getElementById('questionNumber').textContent = questionData.questionNumber;
             document.getElementById('questionText').textContent = questionData.question;
 
+            // Hide next question button if this is question 3
+            const nextBtn = document.getElementById('nextQuestionBtn');
+            if (questionData.questionNumber >= 3) {
+                nextBtn.style.display = 'none';
+            } else {
+                nextBtn.style.display = 'inline-block';
+            }
+
             // Update answers board
             const answersBoard = document.getElementById('answersBoard');
             answersBoard.innerHTML = '';
@@ -900,7 +1018,7 @@
                 answersBoard.appendChild(slot);
             });
 
-            // Update reveal buttons with actual answers
+            // Update reveal buttons with actual answers for host
             const revealButtons = document.getElementById('revealButtons');
             revealButtons.innerHTML = '';
             questionData.fullAnswers.forEach((answer, index) => {
@@ -910,6 +1028,31 @@
                 button.onclick = () => revealAnswer(index);
                 revealButtons.appendChild(button);
             });
+        }
+
+        // Update chat messages
+        function updateChatMessages(team, messages) {
+            const chatContainer = team === 'Team A' ? 'chatMessagesA' : 'chatMessagesB';
+            const chatElement = document.getElementById(chatContainer);
+
+            chatElement.innerHTML = '';
+
+            if (messages.length === 0) {
+                chatElement.innerHTML = '<div style="text-align: center; color: #ccc; margin-top: 50px; font-size: 0.9em;">Team chat will appear here...</div>';
+            } else {
+                messages.forEach(msg => {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'chat-message';
+                    messageDiv.innerHTML = `
+                        <div class="chat-sender">${msg.sender}</div>
+                        <div>${msg.message}</div>
+                    `;
+                    chatElement.appendChild(messageDiv);
+                });
+
+                // Scroll to bottom
+                chatElement.scrollTop = chatElement.scrollHeight;
+            }
         }
 
         // Show notification
@@ -980,6 +1123,19 @@
             showNotification(`${data.team} scored ${data.points} points!`);
         });
 
+        socket.on('answer-revealed-all', (data) => {
+            // Manual reveal by host or answer from teams - visible to host too
+            const slot = document.getElementById(`answer${data.answerIndex}`);
+            slot.classList.add('revealed');
+            slot.querySelector('.answer-text').textContent = `${data.answerIndex + 1}. ${data.answer.text}`;
+
+            // Update scores if provided
+            if (data.allScores) {
+                gameState.scores = data.allScores;
+                updateScoreboard();
+            }
+        });
+
         socket.on('strike-updated', (data) => {
             gameState.strikes[data.team] = data.strikes;
             updateScoreboard();
@@ -1026,6 +1182,11 @@
                 slot.classList.add('revealed');
                 slot.querySelector('.answer-text').textContent = `${index + 1}. ${answer.text}`;
             });
+        });
+
+        socket.on('chat-message', (data) => {
+            console.log('Host received chat message:', data);
+            updateChatMessages(data.team, data.messages);
         });
 
         socket.on('game-ended', (data) => {
