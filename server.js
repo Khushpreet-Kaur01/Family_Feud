@@ -217,7 +217,7 @@ io.on('connection', (socket) => {
         console.log(`Chat message sent successfully`);
     });
 
-    // Submit answer
+    // Submit answer by participant
     socket.on('submit-answer', (answerData) => {
         if (!gameState.isActive || !socket.participant) return;
 
