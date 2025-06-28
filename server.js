@@ -262,7 +262,7 @@ io.on('connection', (socket) => {
                 submittedBy: socket.participant.name
             });
 
-            // Send to team members only
+            // Send to ONLY the team that answered correctly
             io.to(team).emit('answer-correct', {
                 answerIndex: answerIndex,
                 answer: foundAnswer,
@@ -272,16 +272,7 @@ io.on('connection', (socket) => {
                 submittedBy: socket.participant.name
             });
 
-            // Send to all participants to show the revealed answer
-            io.to('Team A').to('Team B').emit('answer-revealed-all', {
-                answerIndex: answerIndex,
-                answer: foundAnswer,
-                team: team,
-                submittedBy: socket.participant.name,
-                allScores: gameState.scores
-            });
-
-            // Send to host with team info
+            // Send to host with team info (host sees all reveals)
             io.to('host').emit('answer-revealed', {
                 team: team,
                 answerIndex: answerIndex,
@@ -291,6 +282,8 @@ io.on('connection', (socket) => {
                 submittedBy: socket.participant.name,
                 submittedAnswer: answer
             });
+
+            console.log(`Team ${team} correctly answered: ${answer} -> ${foundAnswer.text} (+${foundAnswer.points} points)`);
 
         } else {
             // Incorrect answer
@@ -323,10 +316,12 @@ io.on('connection', (socket) => {
                 io.to(team).emit('team-eliminated', { strikes: 3 });
                 io.to('host').emit('team-eliminated', { team: team });
             }
+
+            console.log(`Team ${team} incorrect answer: ${answer} (Strike ${gameState.strikes[team]}/3)`);
         }
     });
 
-    // Manual reveal (host only)
+    // Manual reveal (host only) - reveals to both teams
     socket.on('manual-reveal', (data) => {
         if (socket.id === gameState.host) {
             const { answerIndex } = data;
@@ -335,7 +330,7 @@ io.on('connection', (socket) => {
 
             console.log(`Host manually revealing answer ${answerIndex}: ${answer.text}`);
 
-            // Reveal to all participants
+            // Reveal to all participants (both teams)
             io.to('Team A').to('Team B').emit('answer-revealed-all', {
                 answerIndex: answerIndex,
                 answer: answer,
@@ -349,7 +344,7 @@ io.on('connection', (socket) => {
                 allScores: gameState.scores
             });
 
-            // Update revealed answers for both teams
+            // Update revealed answers for both teams (since host manually revealed it)
             if (!gameState.revealedAnswers['Team A'].includes(answerIndex)) {
                 gameState.revealedAnswers['Team A'].push(answerIndex);
             }
@@ -372,6 +367,8 @@ io.on('connection', (socket) => {
             io.to('host').emit('all-answers-revealed', {
                 answers: question.answers
             });
+
+            console.log('Host revealed all answers');
         }
     });
 
