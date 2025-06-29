@@ -34,8 +34,7 @@ A real-time multiplayer Sanskrit-themed Family Feud game built with Node.js, Exp
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/sanskrit-family-feud.git
-   cd sanskrit-family-feud
+   https://github.com/Khushpreet-Kaur01/Family_Feud
    ```
 
 2. **Install dependencies**
@@ -55,7 +54,7 @@ A real-time multiplayer Sanskrit-themed Family Feud game built with Node.js, Exp
 
 4. **Access the game**
    - Open your browser to `http://localhost:3000`
-   - The server will display network URLs for other devices to join
+   - The server will display network URLs for other devices to join, All the participants and host must connect to same network to play the game and use URL provided by server.
 
 ## 🎯 How to Play
 
