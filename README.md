@@ -116,12 +116,6 @@ sanskrit-family-feud/
 - **Scoring**: Points based on answer popularity
 - **Answer Matching**: Fuzzy matching for Sanskrit and English inputs
 
-## 📝 Sample Questions
-
-1. **Natural Elements**: Name Sanskrit terms for natural elements (earth, fire, water, etc.)
-2. **Knowledge Terms**: Sanskrit words for 'knowledge' and variations
-3. **Cultural Phrases**: Complete and explain famous Sanskrit phrases like "वसुधैव कुटुम्बकम्"
-
 ## 🔧 Configuration
 
 ### Default Credentials
@@ -196,9 +190,6 @@ The game is fully responsive and works on:
 - Check browser console for errors
 - Verify WebSocket connection
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
@@ -211,7 +202,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 If you encounter any issues or have questions:
 1. Check the troubleshooting section above
 2. Open an issue on GitHub
-3. Contact the development team
 
 ---
 
