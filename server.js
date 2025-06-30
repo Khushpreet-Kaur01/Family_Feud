@@ -234,7 +234,7 @@ io.on('connection', (socket) => {
             const userAnswer = answer.toLowerCase();
 
             if (correctAnswer.includes(userAnswer) || userAnswer.includes(correctAnswer) ||
-                // Additional fuzzy matching for Sanskrit words
+                // Additional fuzzy matching for Sanskrit
                 (correctAnswer.includes('देवो') && userAnswer.includes('devo')) ||
                 (correctAnswer.includes('ज्ञान') && userAnswer.includes('gyan')) ||
                 (correctAnswer.includes('विद्या') && userAnswer.includes('vidya'))) {
